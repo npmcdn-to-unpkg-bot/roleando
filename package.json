@@ -1,0 +1,24 @@
+{
+  "name": "roleando",
+  "version": "1.0.0",
+  "description": "Herramientas RPG",
+  "main": "bin/server.js",
+  "scripts": {
+    "gen:watch": "watchify src/generator_engine/index.js -o src/public/generadores/js/bundle.js -v",
+    "devstart": "nodemon -L bin/server",
+    "start": "node bin/server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "guumaster",
+  "license": "ISC",
+  "dependencies": {
+    "es6-promise": "^3.2.1",
+    "express": "^4.13.4",
+    "isomorphic-fetch": "^2.2.1"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "nodemon": "^1.9.2",
+    "watchify": "^3.7.0"
+  }
+}
