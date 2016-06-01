@@ -6,7 +6,7 @@ module.exports = {
   name: 'Roleando',
 
   database: {
-    url: MONGODB_URI
+    url: process.env.MONGODB_URI
   },
 
   passport: {
@@ -23,7 +23,7 @@ module.exports = {
     },
 
     googleAuth : {
-      clientID: process.env.GOOGLE_AUTH_CLIEND_ID,
+      clientID: process.env.GOOGLE_AUTH_CLIENT_ID,
       clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
       callbackURL : `${process.env.HOST}/auth/google/callback`
     }
