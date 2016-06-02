@@ -3,7 +3,7 @@
  <head>
     <title>Motor de Generadores</title>
  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  
+
       <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
       <link rel="stylesheet" type="text/css" href="https://necolas.github.io/normalize.css/4.1.1/normalize.css">
       <script type="text/javascript" src="//code.jquery.com/jquery-2.2.3.js"></script>
@@ -110,9 +110,9 @@ aquel que nos ha traicionado.
             </textarea>
           </div>
           <div  class="">
-    
+
             <div class="form-group clearfix">
-              <button id="save" class=" pull-rightbtn btn-primary">save</button> 
+              <button id="save" class=" pull-rightbtn btn-primary">save</button>
             </div>
             <div class="form-group">
               <label for="remotes">Tablas remotas</label>
@@ -121,20 +121,22 @@ aquel que nos ha traicionado.
 prueba,27q9w
 otra,1sxv8
 4dbhg
-sub,2w5wk 
+sub,2w5wk
               </textarea>
-              <!-- 
+              <!--
 -->
             </div>
             <div class="form-group clearfix">
               <button id="load" class="pull-right btn btn-primary">Cargar tablas</button>
             </div>
-                
+
           </div>
-        </div> 
+        </div>
         <div role="tabpanel" class="tab-pane" id="generator">
           <textarea id="in" class="form-control" rows="10">
-#### Semilla de aventura 
+
+;@tpl|semilla
+#### Semilla de aventura
 ---
 >  Estamos explorando __[explorando]__ que se encuentra en __[ubicacion]__ buscando __[buscando]__
 >
@@ -170,11 +172,9 @@ sub,2w5wk
     <script>
 	$(() => {
 
- 		const tables = gen.parser($('#src').val())
- const  selectors = gen.createSelectors(tables)
- const  generator = gen.createGenerator($('#in').val(), selectors)
- 
- const regen = () => $('#output').empty().append(gen.toHtml(generator()))
+    const generador = gen.init($('#in').val() + $('#src').val())
+
+ const regen = () => $('#output').empty().append(gen.toHtml(generador.semilla()))
 
  $('#roll').on('click', regen)
  regen()

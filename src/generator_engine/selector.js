@@ -2,15 +2,11 @@
 
 module.exports = tables => {
 
-  const selectors = Object.keys(tables).reduce((obj, key) => {
+  return Object.keys(tables).reduce((obj, key) => {
     obj[key] = createWeightedSelector(tables[key])
     return obj
   }, {})
 
-  return Object.assign(selectors, {
-    get: key => selectors[key] ? selectors[key]() : '',
-    keys: Object.keys(selectors)
-  })
 }
 
 const createWeightedSelector = table => {

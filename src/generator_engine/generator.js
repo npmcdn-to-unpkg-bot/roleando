@@ -1,3 +1,4 @@
+'use strict'
 
 const id = x => x
 const range = size => Array.apply(null, Array(size))
@@ -29,7 +30,7 @@ const getModdedGenerator = (mod, gen) => {
    return gen
 }
 
-const makeGenerator = (str, selectors, fromContext) => {
+const makeOneGenerator = (str, selectors, fromContext) => {
 	const matches = []
   let match
 
@@ -52,7 +53,7 @@ const makeGenerator = (str, selectors, fromContext) => {
         matches.push(fin => {
           const replaced = fin.replace(pattern, moddedFn())
           if (hasMoreSelectors(replaced)) {
-             return makeGenerator(replaced, selectors, context)()
+             return makeOneGenerator(replaced, selectors, context)()
           }
           return replaced
         })
@@ -66,4 +67,11 @@ const makeGenerator = (str, selectors, fromContext) => {
   }
 }
 
-module.exports = makeGenerator
+const makeGenerators = (data, selectors) => {
+  return Object.keys(data.tpls).reduce((obj, tpl) => {
+    obj[tpl] = makeOneGenerator(data.tpls[tpl], selectors)
+    return obj
+  }, {})
+}
+
+module.exports = makeGenerators

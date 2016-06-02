@@ -9,6 +9,12 @@ const createGenerator = require('./generator')
 const toHtml = str => marked(str)
 
 module.exports = {
-  parser, createSelectors, createGenerator, toHtml
+  init: (str) => {
+    const data = parse(str)
+    data.selectors = selectors(data.sources)
+    data.generators = generators(data, data.selectors)
+    return data
+  },
+  toHtml
 }
 
