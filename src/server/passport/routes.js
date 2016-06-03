@@ -1,6 +1,6 @@
 'use strict'
 
-const isLoggedIn = require('./is_logged_in')
+const isLoggedIn = require('../middlewares/is_logged_in')
 
 module.exports = function(app, passport) {
 

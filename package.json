@@ -4,7 +4,7 @@
   "description": "Herramientas RPG",
   "main": "bin/server.js",
   "scripts": {
-    "gen:watch": "watchify src/generator_engine/index.js -t babelify -d --s gen -o src/public/generadores/js/bundle.js -v",
+    "gen:watch": "watchify src/generator_engine/index.js -t babelify -d --s gen -o src/server/public/dist/generator_engine.js -v",
     "devstart": "nodemon -L bin/server",
     "start": "node bin/server",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,10 +21,14 @@
     "isomorphic-fetch": "^2.2.1",
     "marked": "^0.3.5",
     "method-override": "^2.3.6",
+    "mongodb": "^2.1.21",
     "mongoose": "^4.4.19",
     "morgan": "^1.7.0",
     "passport": "^0.3.2",
-    "passport-google-oauth": "^1.0.0"
+    "passport-google-oauth": "^1.0.0",
+    "require-dir": "^0.3.0",
+    "shortid": "^2.2.6",
+    "tv4": "^1.2.7"
   },
   "devDependencies": {
     "babel": "^6.5.2",

@@ -3,8 +3,8 @@
 const passport = require('passport');
 const mongoose = require('mongoose');
 
-const config = require('../config')
-const isLoggedIn = require('./is_logged_in')
+const config = require('../../config')
+const isLoggedIn = require('../middlewares/is_logged_in')
 
 mongoose.connect(config.database.url); // connect to our database
 
