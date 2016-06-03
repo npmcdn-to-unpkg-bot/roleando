@@ -174,7 +174,7 @@ sub,2w5wk
 
     const generador = gen.init($('#in').val() + $('#src').val())
 
- const regen = () => $('#output').empty().append(gen.toHtml(generador.semilla()))
+ const regen = () => $('#output').empty().append(gen.toHtml(generador.generators.semilla()))
 
  $('#roll').on('click', regen)
  regen()

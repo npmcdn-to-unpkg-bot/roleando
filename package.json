@@ -4,7 +4,7 @@
   "description": "Herramientas RPG",
   "main": "bin/server.js",
   "scripts": {
-    "gen:watch": "watchify src/generator_engine/index.js -d --s gen -o src/public/generadores/js/bundle.js -v",
+    "gen:watch": "watchify src/generator_engine/index.js -t babelify -d --s gen -o src/public/generadores/js/bundle.js -v",
     "devstart": "nodemon -L bin/server",
     "start": "node bin/server",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,6 +27,9 @@
     "passport-google-oauth": "^1.0.0"
   },
   "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "nodemon": "^1.9.2",
     "watchify": "^3.7.0"
