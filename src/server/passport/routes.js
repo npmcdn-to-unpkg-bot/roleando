@@ -1,19 +1,24 @@
 'use strict'
 
+const errors = require('restify-errors')
+
 const requiresLogin = require('../middlewares/require_login')
 const requiresToken = require('../middlewares/require_token')
 
 module.exports = (app, passport) => {
 
-  app.get('/auth/token', requiresLogin, (req, res, next) => {
-
-    if (req.user && req.user.hasValidToken()) {
-      res.send({
-        token: req.user.token
-      })
-      return
+  app.get('/auth/token', (req, res, next) => {
+    if (!req.isAuthenticated()) {
+      return next(new errors.UnauthorizedError('Unauthorized'))
     }
-    return next(new Error('Unauthorized'))
+
+    if (!req.user || !req.user.hasValidToken()) {
+      return next(new errors.UnauthorizedError('Unauthorized'))
+    }
+
+    res.send({
+      token: req.user.token
+    })
   })
 
   app.put('/auth/token', requiresLogin, requiresToken, (req, res, next) => {
@@ -32,7 +37,7 @@ module.exports = (app, passport) => {
   // the callback after google has authenticated the user
   app.get('/auth/google/callback',
     passport.authenticate('google', {
-      successRedirect : '/user/profile',
+      successRedirect : '/',
       failureRedirect : '/'
     }))
 
@@ -42,7 +47,7 @@ module.exports = (app, passport) => {
   // the callback after google has authorized the user
   app.get('/connect/google/callback',
     passport.authorize('google', {
-      successRedirect : '/user/profile',
+      successRedirect : '/',
       failureRedirect : '/'
     }))
 
@@ -51,7 +56,7 @@ module.exports = (app, passport) => {
     user.google.token = undefined
     user.save(function(err) {
       req.logout()
-      res.redirect('/user/profile')
+      res.redirect('/')
     })
   })
 

@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
+const nunjucks = require( 'nunjucks' )
 const MongoStore = require('connect-mongo')(session)
 
 const config = require('../config')
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 app.use(session({
   secret: config.auth.sessionSecret,
+  name: 'roleando.heroku',
   resave: false,
   saveUninitialized: true,
   cookie: {maxAge: config.auth.sessionCookieExpiration},
@@ -41,16 +43,19 @@ app.use((err, req, res, next) => {
 app.use(requireUserByToken())
 
 // add every route here
-require('./passport/index')(app)
-require('./api/index')(app)
+require('./passport')(app)
+require('./api')(app)
+require('./public')(app)
 
-app.use(express.static(`${__dirname}/public`))
-app.use('/static', express.static(`${__dirname}/../../static`))
+app.use(express.static(`${__dirname}/../../static`))
 
-app.set('view engine', 'ejs') // set up ejs for templating
-
-app.get('/', (req, res) => {
-  res.send('Rolear es bien')
-})
+//app.set('view engine', 'ejs') // set up ejs for templating
+nunjucks.configure( `${__dirname}/views`, {
+  autoescape: true,
+  cache: false,
+  express: app
+} )
+app.engine( 'html', nunjucks.render )
+app.set( 'view engine', 'html' ) ;
 
 module.exports = app

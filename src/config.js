@@ -1,10 +1,12 @@
 'use strict'
 
+const PORT = process.env.PORT || 8080
 
 module.exports = {
-  port: process.env.PORT,
+  port: PORT,
   name: 'Roleando',
-
+  blogUrl: 'http://historiasdeunhobbit.wordpress.com',
+  host: process.env.HOST || `http://localhost:${PORT}`,
   database: {
     url: process.env.MONGODB_URI
   },

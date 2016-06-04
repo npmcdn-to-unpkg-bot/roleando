@@ -1,10 +1,18 @@
 'use strict'
 
-const parse = require('./parser')
-const selectors = require('./selector')
-const generators = require('./generator')
+const gen = require('./index')
 
 const str = `
+;@tablas
+demo:H1JTSHyN
+
+;@plantilla|mytpl
+this tpl is mega way [tabla]
+y tiene CERO lineas [tabla2]
+
+;@plantilla|otra
+[tabla] tienen [tabla2]
+y tiene [3d4] lineas [tabla]
 
 ;tabla
 1,review
@@ -14,18 +22,6 @@ const str = `
 1,aquella
 1,cosas
 1,justo
-
-;@tablas
-nombre:gist:1234
-otro:myjson:1235
-
-;@plantilla|mytpl
-this tpl is mega way [tabla]
-y tiene CERO lineas [tabla2]
-
-;@plantilla|otra
-[tabla] tienen [tabla2]
-y tiene [3d4] lineas [tabla]
 
 ;tabla2
 1,linea B
@@ -37,9 +33,7 @@ y tiene [3d4] lineas [tabla]
 
 `
 
-const data = parse(str)
+const data = gen.init(str)
+console.log( data.generators.mytpl(), data.generators.otra() )
 
-//console.log( JSON.stringify(data, null, 2) )
-const sel = selectors(data.sources)
-const gen = generators(data, sel)
-console.log( gen.mytpl(), gen.otra() )
+console.log(gen.convertToContent(data))

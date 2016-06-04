@@ -15,19 +15,8 @@ module.exports = app => {
 
   require('./routes.js')(app, passport)
 
-  // show the home page (will also have our login links)
-  app.get('/user/login', function(req, res) {
-    res.render('index.ejs')
-  })
-
-  app.get('/user/profile', isLoggedIn, function(req, res) {
-    res.render('profile.ejs', {
-      user : req.user
-    })
-  })
-
   app.get('/logout', function(req, res) {
     req.logout()
-    res.redirect('/user/login')
+    res.redirect('/')
   })
 }

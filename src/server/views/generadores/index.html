@@ -1,0 +1,88 @@
+{% extends "index.html" %}
+
+{% block css %}
+{{ super() }}
+.big-text {
+font-size: 1.5em;
+}
+.hide {
+display: none !important;
+}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#runner-tab" role="tab" data-toggle="tab">Generador</a></li>
+        <li role="presentation"><a href="#sources-tab" role="tab" data-toggle="tab">Tablas y Plantilla</a></li>
+        <li role="presentation"><a href="#ayuda" role="tab" data-toggle="tab">Ayuda</a></li>
+    </ul>
+    <div class="row">
+        &nbsp;
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="tab-content">
+                <!--- RUNNER -->
+                <div role="tabpanel" class="tab-pane active" id="runner-tab">
+
+                    <div class="form-group">
+                        <div class="pull-right">
+                            <button id="btn-regen" class="btn btn-primary"><span class="fa fa-repeat"></span> Generar
+                            </button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="well well-lg big-text " id="runner-output"></div>
+                </div>
+                <!--- TABLAS Y PLANTILLAS -->
+                <div role="tabpanel" class="tab-pane " id="sources-tab">
+                    <div class="form-group clearfix ">
+                        <div class=" btn-group pull-right ">
+                            <button id="load" class="btn btn-primary disabled"><span class="fa fa-cloud-download"></span>
+                                Cargar
+                            </button>
+                            <button id="save" class="btn btn-primary disabled"><span class="fa fa-cloud-upload"></span>
+                                Guardar
+                            </button>
+                            <button id="fork" class="btn btn-primary disabled"><span class="fa fa-code-fork"></span>
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PLANTILLAS -->
+                    <div class="form-group">
+                        <label for="tpls">Plantillas</label>
+                        <p class="help-block">Aqui puedes escribir texto en multiples lineas con referencias a las tablas</p>
+                        <textarea id="tpls" class="form-control"></textarea>
+
+                    </div>
+
+                    <!-- TABLAS -->
+                    <div class="form-group">
+                        <label for="sources">Tablas</label>
+                        <p class="help-block">En este cuadro de texto se pueden agregar tablas para usar en el
+                            generador </p>
+                        <textarea id="sources" class="form-control"></textarea>
+                    </div>
+
+                </div>
+
+                <!--- AYUDA -->
+                <div role="tabpanel" class="tab-pane" id="ayuda">
+                    Nota: Escribir la ayuda.
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block endscript %}
+<script src="/dist/generator_engine.js"></script>
+<script src="/js/generadores.js"></script>
+{% endblock %}
+

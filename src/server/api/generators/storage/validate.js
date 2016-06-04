@@ -9,10 +9,18 @@ const schema = {
     name: 'string',
     desc: 'string',
     author: 'string',
-    content: 'string',
+    data: {
+      type: 'object',
+      properties: {
+        remotes: 'string',
+        tpls: 'string',
+        tables: 'string'
+      },
+      required: ['tables']
+    },
     id: 'string'
   },
-  required: ['name', 'author', 'content']
+  required: ['name', 'author', 'data']
 }
 
 module.exports = data => validator(data, schema)

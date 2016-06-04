@@ -1,0 +1,50 @@
+
+/* https://nagoshiashumari.github.io/Rpg-Awesome/ */
+body  {
+    padding-top: 65px;
+    /*background: cadetblue;*/
+    font-family: 'Noto Sans', sans-serif;
+    /*color: whitesmoke;*/
+}
+
+.tool-group .list-group-item {
+    height:auto;
+    min-height:160px;
+}
+
+.site-name {
+    font-family: 'Sigmar One', sans-serif;
+    margin-left: 33px;
+}
+
+.big-dice {
+    font-size: 2.3em;
+    margin: 0 auto;
+    position: absolute;
+    margin-top: -0.3em;
+    margin-left: -1.1em;
+    animation: colorchange 20s infinite; /* animation-name followed by duration in seconds*/
+    /* you could also use milliseconds (ms) or something like 2.5s */
+    -webkit-animation: colorchange 20s infinite; /* Chrome and Safari */
+}
+
+#tpls {
+    min-height: 15em;
+}
+#sources {
+    min-height: 40em;
+}
+
+@keyframes colorchange
+{
+    0%   {color: #7877AD;}
+    33%  {color: #21ad82;}
+    66%  {color: #7c42ad;}
+}
+
+@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
+{
+    0%   {color: #7877AD;}
+    33%  {color: #21ad82;}
+    66%  {color: #7c42ad;}
+}

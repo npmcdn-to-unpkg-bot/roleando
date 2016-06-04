@@ -7,15 +7,15 @@ const splitLines = str => str.split(/\n/g).map(cleanLine).filter(id).filter(comm
 
 const parseLine = str => {
   const [, num, line] = str.match(/(?:([0-9.]+),)?(.*)/)
-  return  num ? [Number(num), cleanLine(line)] : [1,line]
+  return num ? [Number(num), cleanLine(line)] : [1, line]
 }
 
 const parseRemoteLine = str => {
-  const [, name, src, id] = str.match(/([^:]+):([^:]+):(.*)/)
-  return [id, { name, src, id }]
+  const [, name, id] = str.match(/([^:]+):(.*)/)  //regex with src (/([^:]+):([^:]+):(.*)/)
+  return [id, {name, id}]
 }
 
-const matchRemoteHeader = str => str.match(/^;@(usa|use|remote|tablas)/)
+const matchRemoteHeader = str => str.match(/^;@(usa|use|remotes|tablas)/)
 const matchTemplateHeader = str => str.match(/^;@(?:tpl|plantilla)\|(.*)/)
 const matchTableHeader = str => str.match(/^;(.*)/)
 
@@ -28,8 +28,8 @@ module.exports = str => {
 
     // is remote table
     if (match = matchRemoteHeader(line)) {
-        type = 'remotes'
-        return sources
+      type = 'remotes'
+      return sources
     }
 
     // is template
