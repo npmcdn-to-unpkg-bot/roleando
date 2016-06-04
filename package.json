@@ -40,5 +40,8 @@
     "browserify": "^13.0.1",
     "nodemon": "^1.9.2",
     "watchify": "^3.7.0"
+  },
+  "engines": {
+     "node": ">=6.2.0"
   }
 }
