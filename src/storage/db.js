@@ -12,7 +12,6 @@ module.exports = {
       return Promise.resolve(SINGLETON.db)
     }
 
-    console.log('connecting', config.database.url )
     return MongoClient.connect(config.database.url).then(db => {
       SINGLETON.db = db
       return db
