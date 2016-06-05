@@ -6,7 +6,7 @@ module.exports = {
   port: PORT,
   name: 'Roleando',
   blogUrl: 'http://historiasdeunhobbit.wordpress.com',
-  host: process.env.HOST || `http://localhost:${PORT}`,
+  host: process.env.HOST || `http://roleando.herokuapp.com:${PORT}`,
   database: {
     url: process.env.MONGODB_URI
   },
