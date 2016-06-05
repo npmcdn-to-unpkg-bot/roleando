@@ -1,12 +1,12 @@
 'use strict'
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 80
 
 module.exports = {
   port: PORT,
   name: 'Roleando',
   blogUrl: 'http://historiasdeunhobbit.wordpress.com',
-  host: process.env.HOST || `http://roleando.herokuapp.com:${PORT}`,
+  host: process.env.HOST || `//roleando.herokuapp.com:${PORT}`,
   database: {
     url: process.env.MONGODB_URI
   },
@@ -18,18 +18,6 @@ module.exports = {
     tokenExpiration: '30d'// expires in 30 days
   },
   passport: {
-    facebookAuth : {
-      clientID        : 'your-secret-clientID-here', // your App ID
-      clientSecret    : 'your-client-secret-here', // your App Secret
-      callbackURL     : 'http://localhost:8080/auth/facebook/callback'
-    },
-
-    twitterAuth : {
-      consumerKey        : 'your-consumer-key-here',
-      consumerSecret     : 'your-client-secret-here',
-      callbackURL        : 'http://localhost:8080/auth/twitter/callback'
-    },
-
     googleAuth : {
       clientID: process.env.GOOGLE_AUTH_CLIENT_ID,
       clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,

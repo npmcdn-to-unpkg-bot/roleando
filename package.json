@@ -4,7 +4,8 @@
   "description": "Herramientas RPG",
   "main": "bin/server.js",
   "scripts": {
-    "gen:watch": "watchify src/generator_engine/index.js -t babelify -d --s gen -o static/dist/generator_engine.js -v",
+    "gen:watch": "watchify src/generator_engine/index.js -t babelify -t [ envify --HOST //localhost:8080 --PORT 8080 ] -d --s gen -o static/dist/generator_engine.js -v",
+    "gen:watch:prod": "browserify src/generator_engine/index.js -t babelify -d --s gen -o static/dist/generator_engine.js -v",
     "devstart": "nodemon -L bin/server",
     "start": "node bin/server",
     "test": "echo \"Error: no test specified\" && exit 1"
