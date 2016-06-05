@@ -13,12 +13,17 @@
     <link href='//fonts.googleapis.com/css?family=Sigmar+One|Nunito|Noto+Sans' rel='stylesheet' type='text/css'>
     <link href='/fonts/rpg-awesome/css/rpg-awesome.min.css' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/css/roleando.css">
+    {% block css %}{% endblock %}
+
 
     <script type="text/javascript" src="//code.jquery.com/jquery-2.2.3.js"></script>
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/simple-toast.min.js"></script>
+    {% block js %}{% endblock %}
+
     <style>
-        {% block css %}{% endblock %}
+        {% block styles %}{% endblock %}
+
     </style>
     {% endblock %}
 </head>

@@ -156,6 +156,7 @@
 
   $(() => {
 
+
     SOURCE_ID = getRemoteFromUrl(window.location.href)
 
     if (!SOURCE_ID) {
@@ -164,6 +165,13 @@
     }
 
     showGenerator(SOURCE_ID)
+
+    const clipboard = new Clipboard('#btn-copy');
+    clipboard.on('success', e => {
+      showOk('Copiado al portapapeles')
+      e.clearSelection();
+    });
+
 
     gen.getTokenFromAuth()
       .then(token => {

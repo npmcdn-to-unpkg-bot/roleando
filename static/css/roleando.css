@@ -9,6 +9,9 @@ body  {
     /*color: whitesmoke;*/
 }
 
+.big-text { font-size: 1.5em;  }
+.hide { display: none !important; }
+
 .tool-group .list-group-item {
     height:auto;
     min-height:160px;

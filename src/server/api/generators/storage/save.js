@@ -34,6 +34,7 @@ module.exports = (inId, newData) => validateTable(newData).then(() => {
   }
 
   newData.tableId = shortid.generate()
+  newData.createAt = new Date()
   return insertOne('generator_tables', newData)
     .then(op => {
       if (!op.result.ok) {

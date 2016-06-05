@@ -218,6 +218,7 @@
 
 .card.hovercard .info {
     padding: 15px 15px 10px;
+    min-height: 140px;
 }
 
 .card.hovercard .info .title {
