@@ -168,7 +168,7 @@
 
     const clipboard = new Clipboard('#btn-copy');
     clipboard.on('success', e => {
-      showOk('Copiado al portapapeles')
+      alertOk('Copiado al portapapeles')
       e.clearSelection();
     });
 
