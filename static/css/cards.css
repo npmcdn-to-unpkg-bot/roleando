@@ -192,7 +192,7 @@
 }
 
 .card.hovercard .cardheader {
-    background: url("http://res.cloudinary.com/guumaster-rpg/image/upload/c_crop,g_center,h_135,q_71,w_455,x_0,y_90/v1465128798/blue_d20.png");
+    background: url("//res.cloudinary.com/guumaster-rpg/image/upload/c_crop,g_center,h_135,q_71,w_455,x_0,y_90/v1465128798/blue_d20.png");
     background-size: cover;
     height: 135px;
 }
