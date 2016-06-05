@@ -5,7 +5,10 @@ const fetch = require('isomorphic-fetch')
 const host = process.env.HOST || `//roleando.herokuapp.com`
 const baseUrl = `${host}/api/generators`
 
-const toJSON = res => res.json()
+const toJSON = res => {
+  if (res.status >= 400) return res.json().then(err => Promise.reject(err))
+  return res.json()
+}
 
 const headers = {
   'Accept': 'application/json',
