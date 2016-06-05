@@ -45,6 +45,8 @@ module.exports = passport => {
                 user.google.name = profile.displayName
                 user.google.email = (profile.emails[0].value || '').toLowerCase() // pull the first email
 
+                user.google.picture = profile.photos ? profile.photos[0].value : ''
+
                 user.save(function (err) {
                   if (err)
                     return done(err)
@@ -56,11 +58,14 @@ module.exports = passport => {
               return done(null, user)
             } else {
               var newUser = new User()
+              console.log('PIC', profile)
 
               newUser.google.id = profile.id
               newUser.google.token = token
               newUser.google.name = profile.displayName
               newUser.google.email = (profile.emails[0].value || '').toLowerCase() // pull the first email
+              newUser.google.picture = profile.photos ? profile.photos[0].value : ''
+
 
               newUser.save(function (err) {
                 if (err)
@@ -74,11 +79,13 @@ module.exports = passport => {
         } else {
           // user already exists and is logged in, we have to link accounts
           var user = req.user // pull the user out of the session
+          console.log('PIC', profile)
 
           user.google.id = profile.id
           user.google.token = token
           user.google.name = profile.displayName
           user.google.email = (profile.emails[0].value || '').toLowerCase() // pull the first email
+          user.google.picture =  profile.photos ? profile.photos[0].value : ''
 
           user.save(function (err) {
             if (err)

@@ -1,4 +1,6 @@
 
+@import "cards.css";
+
 /* https://nagoshiashumari.github.io/Rpg-Awesome/ */
 body  {
     padding-top: 65px;
@@ -26,6 +28,12 @@ body  {
     animation: colorchange 20s infinite; /* animation-name followed by duration in seconds*/
     /* you could also use milliseconds (ms) or something like 2.5s */
     -webkit-animation: colorchange 20s infinite; /* Chrome and Safari */
+}
+
+.navbar-profile {
+    height: 30px;
+    display: inline;
+    border-radius: 50%;
 }
 
 #tpls {

@@ -16,12 +16,8 @@ const getHeaders = token  => {
     'Authorization': `Bearer ${token}`
   }, headers)
 }
-let SAVED_TOKEN
-
-const RoleandoAPI = {
-  token: null,
-  setToken: function (token) { SAVED_TOKEN = token },
-  list: id => fetch(`${baseUrl}/tables`, {
+const RoleandoAPI = token => ({
+  listFeatured: id => fetch(`${baseUrl}/tables/featured`, {
     method: 'GET',
     credentials: 'same-origin',
     headers
@@ -31,23 +27,23 @@ const RoleandoAPI = {
     credentials: 'same-origin',
     headers
   }).then(toJSON),
-  create: data => fetch(`${baseUrl}/table/${id}`, {
+  create: data => fetch(`${baseUrl}/table`, {
     method: 'POST',
     credentials: 'same-origin',
     body: JSON.stringify(data),
-    headers: getHeaders(SAVED_TOKEN)
+    headers: getHeaders(token)
   }).then(toJSON),
   update: (id, data) => fetch(`${baseUrl}/table/${id}`, {
     method: 'PUT',
     credentials: 'same-origin',
     body: JSON.stringify(data),
-    headers: getHeaders(SAVED_TOKEN)
+    headers: getHeaders(token)
   }).then(toJSON),
   remove: (id, data) => fetch(`${baseUrl}/table/${id}`, {
     method: 'DELETE',
     credentials: 'same-origin',
-    headers: getHeaders(SAVED_TOKEN)
+    headers: getHeaders(token)
   }).then(toJSON)
-}
+})
 
 module.exports = RoleandoAPI

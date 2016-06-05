@@ -9,6 +9,8 @@ const schema = {
     name: 'string',
     desc: 'string',
     author: 'string',
+    parent: 'string',
+    featured: 'boolean',
     data: {
       type: 'object',
       properties: {

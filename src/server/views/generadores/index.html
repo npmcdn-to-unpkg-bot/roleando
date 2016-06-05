@@ -12,72 +12,105 @@ display: none !important;
 
 {% block body %}
 <div class="container">
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#runner-tab" role="tab" data-toggle="tab">Generador</a></li>
-        <li role="presentation"><a href="#sources-tab" role="tab" data-toggle="tab">Tablas y Plantilla</a></li>
-        <li role="presentation"><a href="#ayuda" role="tab" data-toggle="tab">Ayuda</a></li>
-    </ul>
-    <div class="row">
-        &nbsp;
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="tab-content">
-                <!--- RUNNER -->
-                <div role="tabpanel" class="tab-pane active" id="runner-tab">
+    <div class="row hide" id="generator">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#runner-tab" role="tab" data-toggle="tab">Generador</a></li>
+            <li role="presentation"><a href="#sources-tab" role="tab" data-toggle="tab">Tablas y Plantilla</a></li>
+            <li role="presentation"><a href="#ayuda" role="tab" data-toggle="tab">Ayuda</a></li>
+        </ul>
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="tab-content">
+                    <!--- RUNNER -->
+                    <div role="tabpanel" class="tab-pane active" id="runner-tab">
 
-                    <div class="form-group">
-                        <div class="pull-right">
-                            <button id="btn-regen" class="btn btn-primary"><span class="fa fa-repeat"></span> Generar
-                            </button>
+                        <div class="form-group">
+                            <div class="pull-right">
+                                <button id="btn-regen" class="btn btn-primary"><span class="fa fa-repeat"></span> Generar
+                                </button>
+                            </div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
+                        <div class="well well-lg big-text " id="runner-output"></div>
                     </div>
-                    <div class="well well-lg big-text " id="runner-output"></div>
-                </div>
-                <!--- TABLAS Y PLANTILLAS -->
-                <div role="tabpanel" class="tab-pane " id="sources-tab">
-                    <div class="form-group clearfix ">
-                        <div class=" btn-group pull-right ">
-                            <button id="load" class="btn btn-primary disabled"><span class="fa fa-cloud-download"></span>
-                                Cargar
-                            </button>
+                    <!--- TABLAS Y PLANTILLAS -->
+                    <div role="tabpanel" class="tab-pane " id="sources-tab">
+
+                        <div class="btn-group  pull-right">
                             <button id="save" class="btn btn-primary disabled"><span class="fa fa-cloud-upload"></span>
                                 Guardar
                             </button>
-                            <button id="fork" class="btn btn-primary disabled"><span class="fa fa-code-fork"></span>
-                                Copiar
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
                             </button>
+                            <ul class="dropdown-menu">
+                                <li id="fork" class="disabled"><a href="#" ><span class="fa fa-code-fork"></span> Copiar</a></li>
+                            </ul>
                         </div>
+                        <div class="form-group clearfix "></div>
+
+                        <div class="form-group">
+                            <label for="generator-name">Nombre</label>
+                            <input id="generator-name" class="form-control" placeholder="Nombre del generador"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="generator-desc">Descripcion</label>
+                            <input id="generator-desc" class="form-control" placeholder="Describe tu generador" />
+                        </div>
+
+                        <div class="form-group clearfix "></div>
+                        <!-- PLANTILLAS -->
+                        <div class="form-group">
+                            <label for="tpls">Plantillas</label>
+                            <p class="help-block">Aqui puedes escribir texto en multiples lineas con referencias a las tablas</p>
+                            <textarea id="tpls" class="form-control"></textarea>
+
+                        </div>
+
+                        <!-- TABLAS -->
+                        <div class="form-group">
+                            <label for="sources">Tablas</label>
+                            <p class="help-block">En este cuadro de texto se pueden agregar tablas para usar en el
+                                generador </p>
+                            <textarea id="sources" class="form-control"></textarea>
+                        </div>
+
                     </div>
 
-                    <!-- PLANTILLAS -->
-                    <div class="form-group">
-                        <label for="tpls">Plantillas</label>
-                        <p class="help-block">Aqui puedes escribir texto en multiples lineas con referencias a las tablas</p>
-                        <textarea id="tpls" class="form-control"></textarea>
-
-                    </div>
-
-                    <!-- TABLAS -->
-                    <div class="form-group">
-                        <label for="sources">Tablas</label>
-                        <p class="help-block">En este cuadro de texto se pueden agregar tablas para usar en el
-                            generador </p>
-                        <textarea id="sources" class="form-control"></textarea>
+                    <!--- AYUDA -->
+                    <div role="tabpanel" class="tab-pane" id="ayuda">
+                        Nota: Escribir la ayuda.
                     </div>
 
                 </div>
-
-                <!--- AYUDA -->
-                <div role="tabpanel" class="tab-pane" id="ayuda">
-                    Nota: Escribir la ayuda.
-                </div>
-
             </div>
         </div>
     </div>
 
+    <div class="row hide" id="generator-examples">
+    {% for generator in generators %}
+        <div class="col-lg-3 col-sm-6">
+            <div class="card hovercard">
+                <div class="cardheader"> </div>
+                <div class="avatar">
+                    <img alt="{{generator.author}}" src="{{generator.authorImg}}">
+                </div>
+                <div class="info">
+                    <div class="title">
+                        <a href="/generadores/?id={{generator.tableId}}">{{generator.name}}</a>
+                    </div>
+                    <p class="desc">{{generator.desc}}</p>
+                    <p class="desc small">{{generator.author}}</p>
+                </div>
+                <div class="bottom"> </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    </div>
 </div>
 {% endblock %}
 

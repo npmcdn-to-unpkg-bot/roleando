@@ -1,5 +1,6 @@
 'use strict'
 
+const errors = require('restify-errors')
 const User = require('../passport/models/user')
 
 module.exports = () => (req, res, next) => {
@@ -15,7 +16,7 @@ module.exports = () => (req, res, next) => {
         req.validToken = true
         return next()
       }
-      return next(new Error('Unauthorized'))
+      return next(new errors.UnauthorizedError('Unauthorized'))
     })
     .catch(next)
 

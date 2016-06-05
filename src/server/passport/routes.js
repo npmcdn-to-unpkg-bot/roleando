@@ -9,11 +9,11 @@ module.exports = (app, passport) => {
 
   app.get('/auth/token', (req, res, next) => {
     if (!req.isAuthenticated()) {
-      return next(new errors.UnauthorizedError('Unauthorized'))
+      return next(new errors.UnauthorizedError('User not authenticated'))
     }
 
     if (!req.user || !req.user.hasValidToken()) {
-      return next(new errors.UnauthorizedError('Unauthorized'))
+      return next(new errors.UnauthorizedError('Invalid token'))
     }
 
     res.send({

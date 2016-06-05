@@ -1,106 +1,175 @@
 'use strict'
+;(function () {
 
-const getRemoteFromUrl = rawUrl => {
-  const url = parseURL(rawUrl)
-  return (url && url.params) ? url.params.id : ''
-}
+  let SOURCE_ID
+  const getRemoteFromUrl = rawUrl => {
+    const url = parseURL(rawUrl)
+    return (url && url.params) ? url.params.id : ''
+  }
 
-const parseURL = url => {
-  var a =  document.createElement('a');
-  a.href = url;
-  return {
-    source: url,
-    protocol: a.protocol.replace(':',''),
-    host: a.hostname,
-    port: a.port,
-    query: a.search,
-    params: (function(){
-      var ret = {},
-        seg = a.search.replace(/^\?/,'').split('&'),
-        len = seg.length, i = 0, s;
-      for (;i<len;i++) {
-        if (!seg[i]) { continue; }
-        s = seg[i].split('=');
-        ret[s[0]] = s[1];
-      }
-      return ret;
-    })(),
-    file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
-    hash: a.hash.replace('#',''),
-    path: a.pathname.replace(/^([^\/])/,'/$1'),
-    relative: (a.href.match(/tp:\/\/[^\/]+(.+)/) || [,''])[1],
-    segments: a.pathname.replace(/^\//,'').split('/')
-  };
-}
+  const parseURL = url => {
+    var a = document.createElement('a')
+    a.href = url
+    return {
+      source: url,
+      protocol: a.protocol.replace(':', ''),
+      host: a.hostname,
+      port: a.port,
+      query: a.search,
+      params: (function () {
+        var ret = {},
+          seg = a.search.replace(/^\?/,'').split('&'),
+          len = seg.length, i = 0, s;
+        for (;i<len;i++) {
+          if (!seg[i]) { continue; }
+          s = seg[i].split('=');
+          ret[s[0]] = s[1];
+        }
+        return ret
+      })(),
+      file: (a.pathname.match(/\/([^\/?#]+)$/i) || [, ''])[1],
+      hash: a.hash.replace('#', ''),
+      path: a.pathname.replace(/^([^\/])/, '/$1'),
+      relative: (a.href.match(/tp:\/\/[^\/]+(.+)/) || [, ''])[1],
+      segments: a.pathname.replace(/^\//, '').split('/')
+    }
+  }
 
-const checkAuth = () => {
-  return fetch('/auth/token', {
-    headers: {"content-type": "application/json" },
-    credentials: 'same-origin'
-  })
-    .then(res => res.json()).then(res => res ? res.token : null )
-}
+  const showError = err => $.simplyToast(err, 'danger')
+  const alertOk = msg => $.simplyToast(msg, 'success')
 
-$(() => {
-  let generador
-  let TOKEN
+  const base = parseURL(window.location.url)
+
   const $tpls = $('#tpls')
   const $sources = $('#sources')
   const $btnRegen = $('#btn-regen')
-  const $output =  $('#runner-output')
+  const $output = $('#runner-output')
+  const $examples = $('#generator-examples')
+  const $generator = $('#generator')
+  const $tableName = $('#generator-name')
+  const $tableDesc = $('#generator-desc')
 
-  const SOURCE_ID = getRemoteFromUrl(window.location.href) || 'H1JTSHyN'
+  let generador
 
-  const restartGenerator = () => generador = gen.init($tpls.val() + $sources.val())
-  const exampleGenerator = () => $output.empty().append(gen.toHtml(generador.generators.semilla()))
+  const gen = new Generador({
+    host: `//${base.host}${base.port ? ':'+ base.port : ''}`
+  })
 
-  $tpls.on('change', restartGenerator)
-  $sources.on('change', restartGenerator)
-  $btnRegen.on('click', exampleGenerator)
+  const getTpls = src => {
+    if (!src.match(/;@tpl\|/m)) {
+      return `;@tpl|main\n${src}`
+    }
+    return src
+  }
 
-  gen.remotes.load(SOURCE_ID).then(res => {
+  const restartGenerator = () => {
+    const tpls = getTpls($tpls.val())
+    generador = gen.parseString(`${tpls}${$sources.val()}`)
+  }
+  const runGenerator = () => {
+    $output.empty().append(gen.toHtml(generador.generate()))
+  }
 
-    if (!res) {
-      alert(`No hay datos para el identificador ${SOURCE_ID}`)
+  const redirectToGenerator = id => {
+    window.location.href = `/generadores/?id=${id}`
+  }
+
+  const saveContent = sourceId => {
+    const name = $tableName.val().trim()
+    const desc = $tableDesc.val().trim()
+    if (!name || !desc) {
+      showError('Falta nombre o descripcion')
       return
     }
-    $tpls.val(res.data.tpls)
-    $sources.val(res.data.tables)
-    restartGenerator()
-    exampleGenerator()
-  })
-    .catch(err => {
-      alert(`No hay datos para el identificador ${SOURCE_ID}`)
-      return
-    })
-
-
-  const saveContent = () => {
-    gen.remotes.update(SOURCE_ID, {
-      name: 'tabla',
-      desc: 'desc',
+    gen.remotes.update(sourceId, {
+      name, desc,
       data: {
-        tpls: $tpls.val(),
+        tpls: getTpls($tpls.val()),
         tables: $sources.val()
       }
     }).then(res => {
-      console.log('res')
-      alert('Guardado con exito')
+      alertOk('Guardado con exito')
     })
       .catch(err => {
-        alert(err.message)
+        showError(err.message)
       })
   }
+
+  const forkContent = sourceId => {
+    const name = $tableName.val().trim()
+    const desc = $tableDesc.val().trim()
+    if (!name || !desc) {
+      showError('Falta nombre o descripcion')
+      return
+    }
+
+    gen.remotes.create({
+      name, desc,
+      parent: sourceId,
+      data: {
+        tpls: getTpls($tpls.val()),
+        tables: $sources.val()
+      }
+    }).then(res => {
+      alertOk('Guardado con exito')
+      console.log('RES', res)
+      setTimeout(() => {
+        redirectToGenerator(res.tableId)
+      }, 400)
+    })
+      .catch(err => {
+        showError(err.message)
+      })
+  }
+
   const enableLoggedUI = () => {
-    $('#save').removeClass('disabled').off('click').on('click', saveContent)
+    $('#save').removeClass('disabled').off('click').on('click', () => saveContent(SOURCE_ID))
+    $('#fork').removeClass('disabled').off('click').on('click', () => forkContent(SOURCE_ID))
+  }
+
+  const showGenerator = sourceId => {
+
+    $generator.removeClass('hide')
+
+    $tpls.on('change', restartGenerator)
+    $sources.on('change', restartGenerator)
+    $btnRegen.on('click', runGenerator)
+
+    gen.remotes.load(sourceId).then(res => {
+
+      if (!res) {
+        showError(`No hay datos para el identificador ${sourceId}`)
+        return
+      }
+      $tableName.val(res.name)
+      $tableDesc.val(res.desc)
+      $tpls.val(getTpls(res.data.tpls))
+      $sources.val(res.data.tables)
+      restartGenerator()
+      runGenerator()
+    })
+      .catch(err => {
+        showError(`No hay datos para el identificador ${sourceId}`)
+      })
 
   }
-  checkAuth()
-    .then(token => {
-      TOKEN = token
-      gen.remotes.setToken(token)
-      enableLoggedUI()
-    })
-    .then(res => console.log(res))
 
-})
+  $(() => {
+
+    SOURCE_ID = getRemoteFromUrl(window.location.href)
+
+    if (!SOURCE_ID) {
+      $examples.removeClass('hide')
+      return
+    }
+
+    showGenerator(SOURCE_ID)
+
+    gen.getTokenFromAuth()
+      .then(token => {
+        enableLoggedUI()
+      })
+      .catch(err => {})
+  })
+
+}())

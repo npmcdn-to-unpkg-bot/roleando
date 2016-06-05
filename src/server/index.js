@@ -1,6 +1,7 @@
 'use strict'
 
 const express = require('express')
+const errors = require('restify-errors')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const session = require('express-session')
@@ -57,5 +58,22 @@ nunjucks.configure( `${__dirname}/views`, {
 } )
 app.engine( 'html', nunjucks.render )
 app.set( 'view engine', 'html' ) ;
+app.use(function(err, req, res, next) {
+
+
+  if (req.header('content-type') === 'application/json') {
+    if (err instanceof errors.HttpError) {
+      res.status(err.statusCode).send(err.body)
+      return
+    } else {
+      console.log(err.stack)
+      res.status(500).send(new errors.InternalServerError(err).body)
+      return
+    }
+  }
+  console.log(err.stack)
+  res.status(500).send(err.message || 'Something broke!')
+
+})
 
 module.exports = app
