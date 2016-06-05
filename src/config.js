@@ -6,11 +6,10 @@ module.exports = {
   port: PORT,
   name: 'Roleando',
   blogUrl: 'http://historiasdeunhobbit.wordpress.com',
-  host: process.env.HOST || `//roleando.herokuapp.com:${PORT}`,
+  host: process.env.HOST || `//roleando.herokuapp.com`,
   database: {
     url: process.env.MONGODB_URI
   },
-
   auth: {
     sessionCookieExpiration: 86400 * 30, // 30 days
     sessionSecret: process.env.SESSION_SECRET || 'roleandovoy',

@@ -2,8 +2,8 @@
 
 const fetch = require('isomorphic-fetch')
 
-const config = require('../../config')
-const baseUrl = `${config.host}/api/generators`
+const host = process.env.HOST || `//roleando.herokuapp.com`
+const baseUrl = `${host}/api/generators`
 
 const toJSON = res => res.json()
 

@@ -5,7 +5,7 @@
   "main": "bin/server.js",
   "scripts": {
     "gen:watch": "watchify src/generator_engine/index.js -t babelify -t [ envify --HOST //localhost:8080 --PORT 8080 ] -d --s gen -o static/dist/generator_engine.js -v",
-    "gen:watch:prod": "browserify src/generator_engine/index.js -t babelify -d --s gen -o static/dist/generator_engine.js -v",
+    "gen:watch:prod": "browserify src/generator_engine/index.js -t babelify -d --s gen -t uglifyify -o static/dist/generator_engine.js -v",
     "devstart": "nodemon -L bin/server",
     "start": "node bin/server",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -42,6 +42,8 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "nodemon": "^1.9.2",
+    "uglify": "^0.1.5",
+    "uglifyify": "^3.0.1",
     "watchify": "^3.7.0"
   },
   "engines": {
