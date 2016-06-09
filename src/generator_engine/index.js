@@ -1,6 +1,8 @@
 'use strict'
 
 const marked = require('marked')
+const deepAssign = require('deep-assign');
+const fetch = require('isomorphic-fetch')
 
 const parser = require('./parser')
 const createSelectors = require('./selector')
@@ -16,6 +18,7 @@ class Generador {
     this.token = token
     this.host = host
     this.remotes = remotes(this.token)
+    this.contextList = [ null ]
   }
 
   getTokenFromAuth() {
@@ -40,53 +43,63 @@ class Generador {
 
   parseString(str) {
     const data = parser(str)
-    data.selectors = createSelectors(data.sources)
-    data.generators = createGenerators(data, data.selectors)
-    data.generate = this.generateAll.bind(data)
+    //data.selectors = createSelectors(data.sources)
+    // data.generators = createGenerators(data, data.selectors)
     this.data = data
-    return data
+
+    const promise = data.remotes ? this.loadRemotes(data.remotes) :  Promise.resolve(this)
+    return promise.then(res => {
+
+      this.data.selectors  = deepAssign({}, this.data.selectors, createSelectors(this.data.sources))
+
+      this.data.generators = createGenerators(this.data.tpls, this.data.selectors)
+      console.log('done');
+    })
+  }
+
+  loadRemotes(remoteList) {
+    return Promise.all(Object.keys(remoteList).map(remoteId => {
+      // TODO: check for already loaded remotes
+      return this.remotes.load(remoteId)
+        .then(res => {
+          const str = `${res.data.tpls}\n${res.data.tables}`
+          const context = this.data.remotes[remoteId].name
+
+          const newData = parser(str, context)
+          this.data = deepAssign({}, this.data, newData)
+          this.contextList.push(context)
+
+          if( newData.remotes) {
+            return this.loadRemotes(newData.remotes)
+          }
+
+        })
+    }))
+
+  }
+
+  generate() {
+    return Object.keys(this.data.generators).reduce((acc, name) => {
+      return `${acc} ${this.data.generators[name]()}`
+    }, '')
   }
 
   toHtml(str) {
     return marked(str)
   }
 
-  loadRemotes() {
-    const fetchRemote = remote => this.remotes.load(remote)
-    Promise.all(Object.keys(this.data.remotes).map(remoteId => {
-      return fetchRemote(remoteId)
-      .then(res => {
-        const str = `${res.data.tpls}\n${res.data.tables}`
-        const context =this.data.remotes[remoteId].name
-
-        const data = parser(str, context)
-        data.selectors = createSelectors(data.sources, context)
-        data.generators = createGenerators(data, data.selectors, context)
-        data.generate = this.generateAll.bind(data)
-
-        // TODO: merge all generators
-        console.log('data', data.generate() )
-      })
-    }))
-    .then(res => {
-
-      console.log('done');
-    })
-
-  }
-  generateAll() {
-    return Object.keys(this.generators).reduce((acc, name) => {
-      return `${acc} ${this.generators[name]()}`
-    }, '')
-  }
-
   listFeatured() {
     return this.remotes.listFeatured()
   }
 
-   remoteToContent(remote) {
-     return convertToContent(remote)
-   }
+  remoteToContent(remote) {
+    return convertToContent(remote)
+  }
 
 }
 module.exports = Generador
+
+process.on('unhandledRejection', (reason, p) => {
+  console.log("Unhandled Rejection at: Promise ", p, " reason: ", reason);
+  // application specific logging, throwing an error, or other logic here
+});

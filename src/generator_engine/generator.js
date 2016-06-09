@@ -95,10 +95,54 @@ const makeOneGenerator = (str, selectors, fromContext) => {
   }
 }
 
-const makeGenerators = (data, selectors, fromContext) => {
-  const context = fromContext ? `${fromContext}.` : ''
-  return Object.keys(data.tpls).reduce((obj, tpl) => {
-    obj[`${context}${tpl}`] = makeOneGenerator(data.tpls[tpl], selectors, fromContext)
+// const makeGenerators = (data, selectors, fromContext) => {
+//   const context = fromContext ? `${fromContext}.` : ''
+//   return Object.keys(data.tpls).reduce((obj, tpl) => {
+//     obj[`${tpl}`] = makeOneGenerator(data.tpls[tpl], selectors, fromContext)
+//     return obj
+//   }, {})
+// }
+
+const execReplacement = (str, selectors) => {
+  const lines = str.split(/\n/)
+
+  return lines.reduce((final, line) => {
+    let match
+    if (!hasMoreSelectors(line)) {
+      return `${final}\n${line}`
+    }
+
+    while (match = generatorRE.exec(line)) {
+      let [pattern, mod, fullName] = match
+      let [,context,name] = (fullName || '').match(/(?:([^\.]+)\.)?(.*)/)
+      context = context || 'main'
+
+      // only add known generators to the queue
+      let dice
+      if (dice = isDiceRoll(name)) {
+        let roller = makeRoller(name)
+        line = line.replace(pattern, roller())
+      }
+
+      let generator = selectors[`${context}.${name}`] || selectors[name]
+
+      if (generator) {
+        let moddedFn = getModdedGenerator(mod, generator)
+        line = line.replace(pattern, moddedFn())
+
+        if (hasMoreSelectors(line)) {
+          line = execReplacement(line, selectors)
+        }
+      }
+    }
+    return `${final}${line}`
+
+  }, '')
+}
+
+const makeGenerators = (tpls, selectors) => {
+  return Object.keys(tpls).reduce((obj, tpl) => {
+      obj[tpl] = () => execReplacement(tpls[tpl], selectors)
     return obj
   }, {})
 }

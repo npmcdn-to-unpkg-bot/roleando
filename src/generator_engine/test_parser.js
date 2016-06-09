@@ -4,13 +4,13 @@ const Generator = require('./index')
 
 const str = `
 ;@tablas
-demo:H1JTSHyN
-pnj:rJhS1i-N
+demo:ByX3oHwV
+//pnj:rJhS1i-N
 
 ;@plantilla|mytpl
  una linea simple: [tabla]
- otra: [sub.main]
- sub sub: [sub.explorando]
+ otra: [demo.main]
+ sub sub: [demo.explorando]
 
 ;tabla
 1, con mod x2: - [x5@tabla2] -
@@ -27,10 +27,17 @@ pnj:rJhS1i-N
 const range = size => Array.apply(null, Array(size))
 
 const gen = new Generator()
-const data = gen.parseString(str)
-console.log( range(10).map(() => data.generate() ))
-console.log( data.generate())
+
+gen.parseString(str)
+  .then(data => {
+
+    // console.log( range(10).map(() => gen.generate() ))
+    console.log( gen.generate())
+    // console.log( gen.data.generators)
+    // console.log( gen.data.generators.mytpl())
+
+  })
+
 
 //console.log( JSON.stringify(data, null, 2))
-gen.loadRemotes()
 
