@@ -1,7 +1,6 @@
 'use strict'
 
-module.exports = tables => {
-
+module.exports = (tables, fromContext) => {
   return Object.keys(tables).reduce((obj, key) => {
     obj[key] = createWeightedSelector(tables[key])
     return obj

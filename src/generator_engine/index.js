@@ -43,6 +43,7 @@ class Generador {
     data.selectors = createSelectors(data.sources)
     data.generators = createGenerators(data, data.selectors)
     data.generate = this.generateAll.bind(data)
+    this.data = data
     return data
   }
 
@@ -50,6 +51,29 @@ class Generador {
     return marked(str)
   }
 
+  loadRemotes() {
+    const fetchRemote = remote => this.remotes.load(remote)
+    Promise.all(Object.keys(this.data.remotes).map(remoteId => {
+      return fetchRemote(remoteId)
+      .then(res => {
+        const str = `${res.data.tpls}\n${res.data.tables}`
+        const context =this.data.remotes[remoteId].name
+
+        const data = parser(str, context)
+        data.selectors = createSelectors(data.sources, context)
+        data.generators = createGenerators(data, data.selectors, context)
+        data.generate = this.generateAll.bind(data)
+
+        // TODO: merge all generators
+        console.log('data', data.generate() )
+      })
+    }))
+    .then(res => {
+
+      console.log('done');
+    })
+
+  }
   generateAll() {
     return Object.keys(this.generators).reduce((acc, name) => {
       return `${acc} ${this.generators[name]()}`

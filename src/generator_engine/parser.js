@@ -19,7 +19,8 @@ const matchRemoteHeader = str => str.match(/^;@(usa|use|remotes|tablas)/)
 const matchTemplateHeader = str => str.match(/^;@(?:tpl|plantilla)\|(.*)/)
 const matchTableHeader = str => str.match(/^;(.*)/)
 
-module.exports = str => {
+module.exports = (str, fromContext) => {
+  const context = fromContext ? `${fromContext}.` : ''
   const lines = splitLines(str)
   let match, clean
   let key = 'main'
@@ -36,6 +37,7 @@ module.exports = str => {
     if (match = matchTemplateHeader(line)) {
 
       [, key] = match
+      key = `${context}${key}`
       type = 'tpls'
       return sources
     }
@@ -43,6 +45,7 @@ module.exports = str => {
     // normal table
     if (match = matchTableHeader(line)) {
       [, key] = match
+      key = `${context}${key}`
       type = 'sources'
       return sources
     }

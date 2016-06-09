@@ -95,9 +95,10 @@ const makeOneGenerator = (str, selectors, fromContext) => {
   }
 }
 
-const makeGenerators = (data, selectors) => {
+const makeGenerators = (data, selectors, fromContext) => {
+  const context = fromContext ? `${fromContext}.` : ''
   return Object.keys(data.tpls).reduce((obj, tpl) => {
-    obj[tpl] = makeOneGenerator(data.tpls[tpl], selectors)
+    obj[`${context}${tpl}`] = makeOneGenerator(data.tpls[tpl], selectors, fromContext)
     return obj
   }, {})
 }
