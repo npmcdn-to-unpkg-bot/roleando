@@ -59,10 +59,10 @@ class Generador {
   listFeatured() {
     return this.remotes.listFeatured()
   }
-  //
-  // remoteToContent(remote) {
-  //   return convertToContent(remote)
-  // }
+
+   remoteToContent(remote) {
+     return convertToContent(remote)
+   }
 
 }
 module.exports = Generador
