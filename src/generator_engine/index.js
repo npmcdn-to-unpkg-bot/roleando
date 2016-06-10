@@ -76,6 +76,10 @@ class Generador {
     if (key)  {
       return this.selectors[key] ? this.selectors[key]() : '';
     }
+
+    return Object.keys(this.data.tpls).reduce((acc, name) => {
+      return `${acc} ${this.selectors[name]()}`
+    }, '')
   }
 
   toHtml(str) {

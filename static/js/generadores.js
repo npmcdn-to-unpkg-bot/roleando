@@ -40,6 +40,7 @@
 
   const base = parseURL(window.location.url)
 
+  let STARTED = false
   const $tpls = $('#tpls')
   const $sources = $('#sources')
   const $btnRegen = $('#btn-regen')
@@ -64,10 +65,15 @@
 
   const restartGenerator = () => {
     const tpls = getTpls($tpls.val())
-    generador = gen.parseString(`${tpls}${$sources.val()}`)
+    generador = gen.parseString(`${tpls}${$sources.val()}`).then(() => {
+      STARTED = true
+      runGenerator()
+    })
   }
   const runGenerator = () => {
-    $output.empty().append(gen.toHtml(generador.generate()))
+    if (!STARTED) return;
+
+    $output.empty().append(gen.toHtml(gen.generate()))
   }
 
   const redirectToGenerator = id => {
