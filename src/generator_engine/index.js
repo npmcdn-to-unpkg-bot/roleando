@@ -6,7 +6,7 @@ const fetch = require('isomorphic-fetch')
 
 const parser = require('./parser')
 const createSelectors = require('./selector')
-const createGenerators = require('./generator')
+const makeGenerators = require('./generator')
 const remotes = require('./remotes')
 // const convertToContent = require('./to_content')
 
@@ -42,18 +42,13 @@ class Generador {
   }
 
   parseString(str) {
-    const data = parser(str)
-    //data.selectors = createSelectors(data.sources)
-    // data.generators = createGenerators(data, data.selectors)
-    this.data = data
+    this.data = deepAssign({}, this.data, parser(str))
 
-    const promise = data.remotes ? this.loadRemotes(data.remotes) :  Promise.resolve(this)
-    return promise.then(res => {
+    const promise = this.data.remotes ? this.loadRemotes(this.data.remotes) :  Promise.resolve(this)
+    return promise.then(() => {
 
-      this.data.selectors  = deepAssign({}, this.data.selectors, createSelectors(this.data.sources))
-
-      this.data.generators = createGenerators(this.data.tpls, this.data.selectors)
-      console.log('done');
+      this.selectors = createSelectors(this.data.sources, this.selectors || {})
+      this.selectors = makeGenerators(this.data, this.selectors)
     })
   }
 
@@ -75,13 +70,12 @@ class Generador {
 
         })
     }))
-
   }
 
-  generate() {
-    return Object.keys(this.data.generators).reduce((acc, name) => {
-      return `${acc} ${this.data.generators[name]()}`
-    }, '')
+  generate(key) {
+    if (key)  {
+      return this.selectors[key] ? this.selectors[key]() : '';
+    }
   }
 
   toHtml(str) {

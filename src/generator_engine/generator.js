@@ -58,52 +58,7 @@ const getModdedGenerator = (mod, gen) => {
   return gen
 }
 
-const makeOneGenerator = (str, selectors, fromContext) => {
-  const matches = []
-  let match
-
-  while (match = generatorRE.exec(str)) {
-    let [pattern, mod, fullName] = match
-    let [,context,name] = (fullName || '').match(/(?:([^\.]+)\.)?(.*)/)
-    context = context || fromContext || 'main'
-
-    // only add known generators to the queue
-    let dice
-    if (dice = isDiceRoll(name)) {
-      let roller = makeRoller(name)
-      matches.push(fin => fin.replace(pattern, roller()))
-    }
-
-    let generator = selectors[`${context}.${name}`] || selectors[name]
-
-    if (generator) {
-      let moddedFn = getModdedGenerator(mod, generator)
-      matches.push(fin => {
-        const replaced = fin.replace(pattern, moddedFn())
-        if (hasMoreSelectors(replaced)) {
-          return makeOneGenerator(replaced, selectors, context)()
-        }
-        return replaced
-      })
-    }
-  }
-
-  return () => {
-    return matches.reduce((finalStr, fn) => {
-      return fn(finalStr)
-    }, str)
-  }
-}
-
-// const makeGenerators = (data, selectors, fromContext) => {
-//   const context = fromContext ? `${fromContext}.` : ''
-//   return Object.keys(data.tpls).reduce((obj, tpl) => {
-//     obj[`${tpl}`] = makeOneGenerator(data.tpls[tpl], selectors, fromContext)
-//     return obj
-//   }, {})
-// }
-
-const execReplacement = (str, selectors) => {
+const execReplacement = (str, selectors, fromContext) => {
   const lines = str.split(/\n/)
 
   return lines.reduce((final, line) => {
@@ -115,7 +70,7 @@ const execReplacement = (str, selectors) => {
     while (match = generatorRE.exec(line)) {
       let [pattern, mod, fullName] = match
       let [,context,name] = (fullName || '').match(/(?:([^\.]+)\.)?(.*)/)
-      context = context || 'main'
+      context = context || fromContext || 'main'
 
       // only add known generators to the queue
       let dice
@@ -131,20 +86,22 @@ const execReplacement = (str, selectors) => {
         line = line.replace(pattern, moddedFn())
 
         if (hasMoreSelectors(line)) {
-          line = execReplacement(line, selectors)
+          line = execReplacement(line, selectors, context)
         }
       }
     }
-    return `${final}${line}`
+    return `${final}\n${line}`
 
   }, '')
 }
 
-const makeGenerators = (tpls, selectors) => {
-  return Object.keys(tpls).reduce((obj, tpl) => {
-      obj[tpl] = () => execReplacement(tpls[tpl], selectors)
+module.exports = (data, selectors) => {
+  return Object.keys(data.tpls).reduce((obj, tpl) => {
+    obj[tpl] = () => {
+      let [,context] = (tpl || '').match(/(?:([^\.]+)\.)?(.*)/)
+      context = context || 'main'
+      return execReplacement(data.tpls[tpl], selectors, context)
+    }
     return obj
-  }, {})
+  }, selectors)
 }
-
-module.exports = makeGenerators

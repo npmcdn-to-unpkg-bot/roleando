@@ -5,16 +5,19 @@ const Generator = require('./index')
 const str = `
 ;@tablas
 demo:ByX3oHwV
-//pnj:rJhS1i-N
+pnj:rJhS1i-N
 
 ;@plantilla|mytpl
- una linea simple: [tabla]
- otra: [demo.main]
- sub sub: [demo.explorando]
+una linea simple: [tabla]
+
+;@plantilla|plan2
+[aventuras.main]
+[aventuras.main]
+[demo.main]
 
 ;tabla
 1, con mod x2: - [x5@tabla2] -
-1, con mod 1d3: - [1d20@tabla2] -
+1, con mod 1d20: - [1d20@tabla2] -
 1, con prob 33%: - [33%@tabla2] -
 1, con prob 1/10: - [9/10@tabla2] -
 
@@ -24,20 +27,17 @@ demo:ByX3oHwV
 1,linea3
 `
 
-const range = size => Array.apply(null, Array(size))
-
 const gen = new Generator()
 
 gen.parseString(str)
-  .then(data => {
+  .then(() => {
 
-    // console.log( range(10).map(() => gen.generate() ))
-    console.log( gen.generate())
-    // console.log( gen.data.generators)
-    // console.log( gen.data.generators.mytpl())
+    console.log('>>>> ')
+    console.log( gen.generate('plan2'))
+    console.log( gen.generate('mytpl'))
+    console.log( gen.generate('aventuras.main'))
+    console.log( gen.generate('tabla2'))
+    console.log('>>>>>')
 
   })
-
-
-//console.log( JSON.stringify(data, null, 2))
 

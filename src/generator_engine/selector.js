@@ -1,11 +1,10 @@
 'use strict'
 
-module.exports = (tables, fromContext) => {
+module.exports = (tables, selectors) => {
   return Object.keys(tables).reduce((obj, key) => {
     obj[key] = createWeightedSelector(tables[key])
     return obj
-  }, {})
-
+  }, selectors)
 }
 
 const createWeightedSelector = table => {
