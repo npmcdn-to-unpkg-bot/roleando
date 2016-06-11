@@ -7,7 +7,7 @@ const toLowerCase = str => str.toLowerCase()
 const ucFirst = str => str.replace(/^(\s+)?(.)(.*)/, (t, a, b, c) => `${a||''}${(b||'').toUpperCase()}${(c||'').toLowerCase()}` )
 const toName = str => toTitleCase(str).replace(nameLowerRE, (_, m) =>  m.toLowerCase())
 
-const nameLowerRE = /(\s*(del|el|al|la|de|un|una|unas|unos|uno|the)\s+)/gi
+const nameLowerRE = /(\s*(del|el|al|la|de|un|una|unas|unos|uno|the|of|from)\s+)/gi
 const generatorRE = /([^\[]*)\[(?:([^@\]]+)@)?([^\[\]|]*)(?:\|([^\[\]]*))?\]/gm
 const lastpartRE = /((?:.+)\])?(.*)$/
 
