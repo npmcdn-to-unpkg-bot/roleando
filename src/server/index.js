@@ -8,6 +8,8 @@ const session = require('express-session')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
 const nunjucks = require( 'nunjucks' )
+const favicon = require('serve-favicon')
+
 const MongoStore = require('connect-mongo')(session)
 
 const config = require('../config')
@@ -24,8 +26,6 @@ app.use(cookieParser()) // read cookies (needed for auth)
 app.use(bodyParser.json()) // get information from html forms
 app.use(bodyParser.urlencoded({extended: true}))
 
-// Basic usage
-// mongoose.connect(config.database.url)
 
 app.use(session({
   secret: config.auth.sessionSecret,
@@ -49,6 +49,7 @@ require('./api')(app)
 require('./public')(app)
 require('./sitemap')(app)
 
+app.use(favicon(`${__dirname}/../../static/favicon.ico`))
 app.use(express.static(`${__dirname}/../../static`))
 
 //app.set('view engine', 'ejs') // set up ejs for templating
