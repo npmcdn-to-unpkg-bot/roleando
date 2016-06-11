@@ -189,6 +189,7 @@
     overflow: hidden;
     text-align: left;
     background-color: rgba(214, 224, 226, 0.2);
+    border-radius: 1em;
 }
 
 .card.hovercard .cardheader {
@@ -205,6 +206,35 @@
     float: right;
 }
 
+#generator-list .thumbnail .desc {
+    min-height: 4em;
+    max-height: 4em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2em;
+}
+.thumbnail .avatar {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+}
+
+.thumbnail .author {
+    margin-right: 40px;
+    margin-bottom: 3px;
+}
+.thumbnail .avatar img {
+    width: 35px;
+    height: 35px;
+    max-width: 35px;
+    max-height: 35px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+
+    /*border: 5px solid rgba(255, 255, 255, 0.5);*/
+}
 .card.hovercard .avatar img {
     width: 70px;
     height: 70px;
@@ -235,6 +265,10 @@
     line-height: 20px;
     color: #737373;
     text-overflow: ellipsis;
+    padding-top: 1em;
+    margin-bottom: 2em;
+    min-height: 6em;
+    max-height: 6em;
 }
 
 .card.hovercard .bottom {

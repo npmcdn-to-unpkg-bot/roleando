@@ -1,16 +1,23 @@
 {% extends "index.html" %}
 
+{% block metas %}
+<meta property="og:title" content="{{ generator['name'] | default('Generadores aleatorios') }}" />
+<meta property="og:description" content="{{ generator['desc'] | default('Generadores aleatorios')}}" />
+{% endblock %}
+
 {% block js %}
 {{ super() }}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
 {% endblock %}
 
 {% block body %}
 <div class="container">
-    <div class="row hide" id="generator">
+
+    <div class="row {{ 'hide' if not isNewOrEdit }}" id="generator">
+
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#runner-tab" role="tab" data-toggle="tab">Generador</a></li>
-            <li role="presentation"><a href="#sources-tab" role="tab" data-toggle="tab">Tablas y Plantilla</a></li>
+            <li role="presentation" class="{{ 'active' if not isNewOrEdit }}"><a href="#runner-tab" role="tab" data-toggle="tab">Generador</a></li>
+            <li role="presentation" class="{{ 'active' if isNewOrEdit }}"><a href="#sources-tab" role="tab" data-toggle="tab">Tablas y Plantilla</a></li>
             <li role="presentation"><a href="#ayuda" role="tab" data-toggle="tab">Ayuda</a></li>
         </ul>
         <div class="row">
@@ -20,7 +27,7 @@
             <div class="panel-body">
                 <div class="tab-content">
                     <!--- RUNNER -->
-                    <div role="tabpanel" class="tab-pane active" id="runner-tab">
+                    <div role="tabpanel" class="tab-pane {{ 'active' if not isNewOrEdit }}" id="runner-tab">
 
                         <div class="form-group pull-right" >
                             <div class="btn-group">
@@ -32,9 +39,16 @@
                         </div>
                         <div class="form-group clearfix" ></div>
                         <div class="well well-lg big-text " id="runner-output"></div>
+
+                        <!--  SHARE! -->
+                        <div class="clearfix">&nbsp;</div>
+                        <div class="pull-right">
+                            <div class="addthis_sharing_toolbox" data-url="{{generator.shortLink}}" data-title="Prueba el generador aleatorio '{{generator.name}}' "></div>
+                        </div>
+
                     </div>
                     <!--- TABLAS Y PLANTILLAS -->
-                    <div role="tabpanel" class="tab-pane " id="sources-tab">
+                    <div role="tabpanel" class="tab-pane {{ 'active' if isNewOrEdit }}" id="sources-tab">
 
                         <div class="btn-group  pull-right">
                             <button id="save" class="btn btn-primary disabled"><span class="fa fa-cloud-upload"></span>
@@ -63,7 +77,12 @@
                         <div class="form-group">
                             <label for="tpls">Plantillas</label>
                             <p class="help-block">Aqui puedes escribir texto en multiples lineas con referencias a las tablas</p>
-                            <textarea id="tpls" class="form-control"></textarea>
+                            <textarea id="tpls" class="form-control">
+Un plantilla simple
+---
+Esta plantilla muestra una opción de la tabla de ejemplo: [tabla_ejemplo]
+
+</textarea>
 
                         </div>
 
@@ -72,7 +91,14 @@
                             <label for="sources">Tablas</label>
                             <p class="help-block">En este cuadro de texto se pueden agregar tablas para usar en el
                                 generador </p>
-                            <textarea id="sources" class="form-control"></textarea>
+                            <textarea id="sources" class="form-control">
+;tabla_ejemplo
+1,primera opción
+1,segunda opción
+6,tercera opción (60% probabilidades)
+1,cuarta opción
+1,quinta opción
+</textarea>
                         </div>
 
                     </div>
@@ -85,11 +111,13 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 
-    <div class="row hide" id="generator-examples">
-    {% for generator in generators %}
-        <div class="col-lg-3 col-sm-6">
+    <div class="row hide" id="generator-featured">
+    {% for generator in featured %}
+        <div class="col-lg-6 col-sm-6 col-xs-12">
             <div class="card hovercard">
                 <div class="cardheader"> </div>
                 <div class="avatar">
@@ -97,22 +125,58 @@
                 </div>
                 <div class="info">
                     <div class="title">
-                        <a href="/generadores/?id={{generator.tableId}}">{{generator.name}}</a>
+                        <a href="{{generator.link}}">{{generator.name}}</a>
                     </div>
                     <p class="desc">{{generator.desc}}</p>
-                    <p class="desc small">{{generator.author}}</p>
+                    <p class="pull-right small">{{generator.author}}</p>
                 </div>
                 <div class="bottom"> </div>
             </div>
         </div>
     {% endfor %}
-
     </div>
+    <hr class="" />
+    <div class="row hide" id="generator-list">
+        {% for generator in generators %}
+        <div class="col-lg-4 col-sm-6 col-xs-12">
+
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3><a href="{{generator.link}}">{{generator.name}}</a></h3>
+                        <p class="desc">{{generator.desc}}</p>
+                        <div class="avatar">
+                            <img alt="{{generator.author}}" src="{{generator.authorImg}}">
+                        </div>
+                        <span class="author pull-right">{{generator.author}}</span>
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}
 
 {% block endscript %}
+<script>
+{% if (generator) %}
+    const GENERATOR_SOURCE_ID = '{{generator.tableId}}'
+{% elif isNewOrEdit %}
+    const GENERATOR_SOURCE_ID = 'NEW'
+{% else %}
+    const GENERATOR_SOURCE_ID = ''
+{% endif %}
+</script>
 <script src="/dist/generator_engine.js"></script>
 <script src="/js/generadores.es5.js"></script>
-{% endblock %}
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-575bf8f55e275d97"></script>
 
+<script type="text/javascript">
+    window.addthis_config = window.addthis_config||{};
+    window.addthis_config.data_track_addressbar = false;
+    window.addthis_config.data_track_clickback = false;
+</script>
+{% endblock %}

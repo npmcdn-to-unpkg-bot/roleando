@@ -45,7 +45,7 @@
   const $sources = $('#sources')
   const $btnRegen = $('#btn-regen')
   const $output = $('#runner-output')
-  const $examples = $('#generator-examples')
+  const $examples = $('#generator-featured, #generator-list')
   const $generator = $('#generator')
   const $tableName = $('#generator-name')
   const $tableDesc = $('#generator-desc')
@@ -76,33 +76,48 @@
     $output.empty().append(gen.toHtml(gen.generate()))
   }
 
-  const redirectToGenerator = id => {
-    window.location.href = `/generadores/?id=${id}`
+  const redirectAfterNew = generator => {
+    alertOk('Guardado con exito')
+    console.log('RES', generator)
+    setTimeout(() => {
+      window.location.href = `${generator.link}?edit=1`
+    }, 500)
   }
 
   const saveContent = sourceId => {
+    const id = sourceId === 'NEW' ? '' : sourceId
     const name = $tableName.val().trim()
     const desc = $tableDesc.val().trim()
     if (!name || !desc) {
       showError('Falta nombre o descripcion')
       return
     }
-    gen.remotes.update(sourceId, {
+    const content = {
       name, desc,
       data: {
         tpls: getTpls($tpls.val()),
         tables: $sources.val()
       }
-    }).then(res => {
-      alertOk('Guardado con exito')
-    })
+    }
+
+    if (id) {
+      return gen.remotes.update(id, content).then(res => {
+        alertOk('Guardado con exito')
+      })
+        .catch(err => {
+          showError(err.message)
+        })
+    }
+
+    gen.remotes.create(content)
+      .then(redirectAfterNew)
       .catch(err => {
         showError(err.message)
       })
   }
 
   const forkContent = sourceId => {
-    const name = $tableName.val().trim()
+    const name = `${$tableName.val().trim()} - copia`
     const desc = $tableDesc.val().trim()
     if (!name || !desc) {
       showError('Falta nombre o descripcion')
@@ -116,13 +131,7 @@
         tpls: getTpls($tpls.val()),
         tables: $sources.val()
       }
-    }).then(res => {
-      alertOk('Guardado con exito')
-      console.log('RES', res)
-      setTimeout(() => {
-        redirectToGenerator(res.tableId)
-      }, 400)
-    })
+    }).then(redirectAfterNew)
       .catch(err => {
         showError(err.message)
       })
@@ -130,7 +139,14 @@
 
   const enableLoggedUI = () => {
     $('#save').removeClass('disabled').off('click').on('click', () => saveContent(SOURCE_ID))
+
+    if (SOURCE_ID === 'NEW') return
+
     $('#fork').removeClass('disabled').off('click').on('click', () => forkContent(SOURCE_ID))
+  }
+  
+  const updateShareInfo = () => {
+    $twitterShare.data('')
   }
 
   const showGenerator = sourceId => {
@@ -138,22 +154,26 @@
     $generator.removeClass('hide')
 
     $tpls.on('change', restartGenerator)
+    $tableName.on('change', updateShareInfo)
     $sources.on('change', restartGenerator)
     $btnRegen.on('click', runGenerator)
 
-    gen.remotes.load(sourceId).then(res => {
-
-      if (!res) {
-        showError(`No hay datos para el identificador ${sourceId}`)
-        return
-      }
-      $tableName.val(res.name)
-      $tableDesc.val(res.desc)
-      $tpls.val(getTpls(res.data.tpls))
-      $sources.val(res.data.tables)
+    if (sourceId === 'NEW') {
       restartGenerator()
-      runGenerator()
+      return
+    }
+
+    gen.remotes.load(sourceId).then(res => {
+      return res || Promise.reject(`No hay datos para el identificador ${sourceId}`)
     })
+      .then(res => {
+        $tableName.val(res.name)
+        $tableDesc.val(res.desc)
+        $tpls.val(getTpls(res.data.tpls))
+        $sources.val(res.data.tables)
+        restartGenerator()
+        runGenerator()
+      })
       .catch(err => {
         showError(`No hay datos para el identificador ${sourceId}`)
       })
@@ -163,7 +183,7 @@
   $(() => {
 
 
-    SOURCE_ID = getRemoteFromUrl(window.location.href)
+    SOURCE_ID = GENERATOR_SOURCE_ID || getRemoteFromUrl(window.location.href)
 
     if (!SOURCE_ID) {
       $examples.removeClass('hide')

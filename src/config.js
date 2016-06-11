@@ -7,6 +7,7 @@ module.exports = {
   name: 'Roleando',
   blogUrl: 'http://historiasdeunhobbit.wordpress.com',
   host: process.env.HOST || `//roleando.herokuapp.com`,
+  mailRecipient: process.env.MAIL_RECIPIENT,
   database: {
     url: process.env.MONGODB_URI
   },
@@ -15,6 +16,10 @@ module.exports = {
     sessionSecret: process.env.SESSION_SECRET || 'roleandovoy',
     tokenSecret: process.env.TOKEN_SECRET || 'roleandovoy',
     tokenExpiration: '30d'// expires in 30 days
+  },
+  sendgrid: {
+    user: process.env.SENDGRID_USERNAME,
+    pass: process.env.SENDGRID_PASSWORD
   },
   passport: {
     googleAuth : {
