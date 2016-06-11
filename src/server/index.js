@@ -47,6 +47,7 @@ app.use(requireUserByToken())
 require('./passport')(app)
 require('./api')(app)
 require('./public')(app)
+require('./sitemap')(app)
 
 app.use(express.static(`${__dirname}/../../static`))
 

@@ -36,6 +36,8 @@
     "restify-errors": "^4.2.3",
     "selectn": "^1.0.20",
     "shortid": "^2.2.6",
+    "sitemap": "^1.6.0",
+    "slug": "^0.9.1",
     "tv4": "^1.2.7"
   },
   "devDependencies": {
