@@ -1,26 +1,35 @@
 'use strict'
 
 const id = x => x
-const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
-const toUpperCase = str => str.split(/\n/).map(str => str.toUpperCase()).join('\n')
-const toLowerCase = str => str.toLowerCase()
-const ucFirst = str => str.replace(/^(\s+)?(.)(.*)/, (t, a, b, c) => `${a||''}${(b||'').toUpperCase()}${(c||'').toLowerCase()}` )
-const toName = str => toTitleCase(str).replace(nameLowerRE, (_, m) =>  m.toLowerCase())
+const {
+  toTitleCase, toUpperCase, toLowerCase, ucFirst, toName,
+  addArticle, addArticleFemale, addArticleMale, toFemale, toMale
+} = require('./filters')
 
-const nameLowerRE = /(\s*(del|el|al|la|de|un|una|unas|unos|uno|the|of|from)\s+)/gi
 const generatorRE = /([^\[]*)\[(?:([^@\]]+)@)?([^\[\]|]*)(?:\|([^\[\]]*))?\]/gm
 const lastpartRE = /((?:.+)\])?(.*)$/
 
 const FILTERS = {
+
+  name: toName,
+  frase: ucFirst,
+  title: toTitleCase,
+  upper: toUpperCase,
+  lower: toLowerCase,
+  male: toMale,
+  female: toFemale,
+
+  '+art': addArticle,
+  '+artm': addArticleMale,
+  '+artf': addArticleFemale,
+
   ucfirst: ucFirst,
   nombre: toName,
-  name: toName,
-  title: toTitleCase,
   titulo: toTitleCase,
   may: toUpperCase,
   min: toLowerCase,
-  upper: toUpperCase,
-  lower: toLowerCase
+  masc: toMale,
+  fem: toFemale
 }
 
 const applyOuter = (str, fn) => {
@@ -39,14 +48,10 @@ module.exports = strFilters => {
   }
 
   return str => {
-
     return filters.filter(id).reduce((moddedStr, filter) => {
       let fn  = FILTERS[filter]
 
       return fn ? applyOuter(moddedStr, fn) : moddedStr
-
     }, str)
-
-
   }
 }
