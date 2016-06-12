@@ -16,7 +16,10 @@ body  {
     height:auto;
     min-height:160px;
 }
-
+p.separador {
+    line-height: 1em;
+    min-height: 1em;
+}
 .site-name {
     font-family: 'Sigmar One', sans-serif;
     margin-left: 33px;
