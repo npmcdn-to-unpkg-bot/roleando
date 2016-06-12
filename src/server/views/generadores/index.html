@@ -14,13 +14,13 @@
 <div class="container">
 
     <div class="row form-group">
-
-
         <div class="btn-group pull-right ">
             {% if isNewOrEdit or generator  %}
             <a class="btn btn-primary" href="/generadores/" role="button"><span class="fa fa-arrow-circle-o-left"></span> Volver</a>
             {% endif %}
-            <a class="btn btn-primary" href="/generadores/new" role="button"><span class="fa fa-file-text-o"></span> Nuevo</a>
+            {% if not isNewOrEdit %}
+            <a id="btn-new" class="btn btn-primary" href="/generadores/new" role="button"><span class="fa fa-file-text-o"></span> Nuevo</a>
+            {% endif %}
 
         </div>
         {% if isNewOrEdit or generator %}
