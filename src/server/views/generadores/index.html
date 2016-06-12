@@ -13,149 +13,31 @@
 {% block body %}
 <div class="container">
 
-    <div class="row {{ 'hide' if not isNewOrEdit }}" id="generator">
+    <div class="row form-group">
 
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="{{ 'active' if not isNewOrEdit }}"><a href="#runner-tab" role="tab" data-toggle="tab">Generador</a></li>
-            <li role="presentation" class="{{ 'active' if isNewOrEdit }}"><a href="#sources-tab" role="tab" data-toggle="tab">Tablas y Plantilla</a></li>
-            <li role="presentation"><a href="#ayuda" role="tab" data-toggle="tab">Ayuda</a></li>
-        </ul>
-        <div class="row">
-            &nbsp;
+
+        <div class="btn-group pull-right ">
+            {% if isNewOrEdit or generator  %}
+            <a class="btn btn-primary" href="/generadores/" role="button"><span class="fa fa-arrow-circle-o-left"></span> Volver</a>
+            {% endif %}
+            {% if generators %}
+            <a class="btn btn-primary" href="/generadores/new" role="button"><span class="fa fa-file-text-o"></span> Nuevo</a>
+            {% endif %}
+
         </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="tab-content">
-                    <!--- RUNNER -->
-                    <div role="tabpanel" class="tab-pane {{ 'active' if not isNewOrEdit }}" id="runner-tab">
-
-                        <div class="form-group pull-right" >
-                            <div class="btn-group">
-                                <button id="btn-copy" data-clipboard-action="copy" data-clipboard-target="#runner-output" class="btn btn-primary"><span class="fa  fa-paste"></span> Copiar
-                                </button>
-                                <button id="btn-regen" class="btn btn-primary"><span class="fa fa-repeat"></span> Generar
-                                </button>
-                            </div>
-                        </div>
-                        <div class="form-group clearfix" ></div>
-                        <div class="well well-lg big-text " id="runner-output"></div>
-
-                        <!--  SHARE! -->
-                        <div class="clearfix">&nbsp;</div>
-                        <div class="pull-right">
-                            <div class="addthis_sharing_toolbox" data-url="{{generator.shortLink}}" data-title="Prueba el generador aleatorio '{{generator.name}}' "></div>
-                        </div>
-
-                    </div>
-                    <!--- TABLAS Y PLANTILLAS -->
-                    <div role="tabpanel" class="tab-pane {{ 'active' if isNewOrEdit }}" id="sources-tab">
-
-                        <div class="btn-group  pull-right">
-                            <button id="save" class="btn btn-primary disabled"><span class="fa fa-cloud-upload"></span>
-                                Guardar
-                            </button>
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li id="fork" class="disabled"><a href="#" ><span class="fa fa-code-fork"></span> Copiar</a></li>
-                            </ul>
-                        </div>
-                        <div class="form-group clearfix "></div>
-
-                        <div class="form-group">
-                            <label for="generator-name">Nombre</label>
-                            <input id="generator-name" class="form-control" placeholder="Nombre del generador"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="generator-desc">Descripcion</label>
-                            <input id="generator-desc" class="form-control" placeholder="Describe tu generador" />
-                        </div>
-
-                        <div class="form-group clearfix "></div>
-                        <!-- PLANTILLAS -->
-                        <div class="form-group">
-                            <label for="tpls">Plantillas</label>
-                            <p class="help-block">Aqui puedes escribir texto en multiples lineas con referencias a las tablas</p>
-                            <textarea id="tpls" class="form-control">
-Un plantilla simple
----
-Esta plantilla muestra una opción de la tabla de ejemplo: [tabla_ejemplo]
-
-</textarea>
-
-                        </div>
-
-                        <!-- TABLAS -->
-                        <div class="form-group">
-                            <label for="sources">Tablas</label>
-                            <p class="help-block">En este cuadro de texto se pueden agregar tablas para usar en el
-                                generador </p>
-                            <textarea id="sources" class="form-control">
-;tabla_ejemplo
-1,primera opción
-1,segunda opción
-6,tercera opción (60% probabilidades)
-1,cuarta opción
-1,quinta opción
-</textarea>
-                        </div>
-
-                    </div>
-
-                    <!--- AYUDA -->
-                    <div role="tabpanel" class="tab-pane" id="ayuda">
-                        Nota: Escribir la ayuda.
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
+        {% if isNewOrEdit or generator %}
+        <h3 id="generator-title">{{generator.name}}</h3>
+        {% endif %}
     </div>
+    <div class="clearfix"></div>
 
-    <div class="row hide" id="generator-featured">
-    {% for generator in featured %}
-        <div class="col-lg-6 col-sm-6 col-xs-12">
-            <div class="card hovercard">
-                <div class="cardheader"> </div>
-                <div class="avatar">
-                    <img alt="{{generator.author}}" src="{{generator.authorImg}}">
-                </div>
-                <div class="info">
-                    <div class="title">
-                        <a href="{{generator.link}}">{{generator.name}}</a>
-                    </div>
-                    <p class="desc">{{generator.desc}}</p>
-                    <p class="pull-right small">{{generator.author}}</p>
-                </div>
-                <div class="bottom"> </div>
-            </div>
-        </div>
-    {% endfor %}
-    </div>
-    <hr class="" />
-    <div class="row hide" id="generator-list">
-        {% for generator in generators %}
-        <div class="col-lg-4 col-sm-6 col-xs-12">
+    {% if isNewOrEdit or generator %}
+        {% include "./detalle.html" %}
+    {% endif %}
 
-                <div class="thumbnail">
-                    <div class="caption">
-                        <h3><a href="{{generator.link}}">{{generator.name}}</a></h3>
-                        <p class="desc">{{generator.desc}}</p>
-                        <div class="avatar">
-                            <img alt="{{generator.author}}" src="{{generator.authorImg}}">
-                        </div>
-                        <span class="author pull-right">{{generator.author}}</span>
-                        <div class="clearfix"></div>
-
-                    </div>
-                </div>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
+    {% if generators %}
+        {% include "./listado.html" %}
+    {% endif %}
 
 </div>
 {% endblock %}

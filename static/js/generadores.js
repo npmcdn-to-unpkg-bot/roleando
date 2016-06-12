@@ -48,6 +48,7 @@
   const $examples = $('#generator-featured, #generator-list')
   const $generator = $('#generator')
   const $tableName = $('#generator-name')
+  const $tableTitle = $('#generator-title')
   const $tableDesc = $('#generator-desc')
 
   let generador
@@ -145,8 +146,8 @@
     $('#fork').removeClass('disabled').off('click').on('click', () => forkContent(SOURCE_ID))
   }
   
-  const updateShareInfo = () => {
-    $twitterShare.data('')
+  const updateTitle = e => {
+    $tableTitle.html($(e.target).val())
   }
 
   const showGenerator = sourceId => {
@@ -154,7 +155,7 @@
     $generator.removeClass('hide')
 
     $tpls.on('change', restartGenerator)
-    $tableName.on('change', updateShareInfo)
+    $tableName.on('change', updateTitle)
     $sources.on('change', restartGenerator)
     $btnRegen.on('click', runGenerator)
 

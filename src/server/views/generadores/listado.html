@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="" id="generator-featured">
+        {% for generator in featured %}
+        <div class="col-lg-6 col-sm-6 col-xs-12">
+            <div class="card hovercard">
+                <div class="cardheader"> </div>
+                <div class="avatar">
+                    <img alt="{{generator.author}}" src="{{generator.authorImg}}">
+                </div>
+                <div class="info">
+                    <div class="title">
+                        <a href="{{generator.link}}">{{generator.name}}</a>
+                    </div>
+                    <p class="desc">{{generator.desc}}</p>
+                    <p class="pull-right small">{{generator.author}}</p>
+                </div>
+                <div class="bottom"> </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <hr class="" />
+
+    <div class="hide" id="generator-list">
+        {% for generator in generators %}
+        <div class="col-lg-4 col-sm-6 col-xs-12">
+
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4><a href="{{generator.link}}">{{generator.name}}</a></h4>
+                    <p class="desc">{{generator.desc}}</p>
+                    <div class="avatar">
+                        <img alt="{{generator.author}}" src="{{generator.authorImg}}">
+                    </div>
+                    <span class="author pull-right">{{generator.author}}</span>
+                    <div class="clearfix"></div>
+
+                </div>
+            </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
