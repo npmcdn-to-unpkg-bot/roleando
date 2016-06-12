@@ -23,7 +23,9 @@ const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCas
 const toUpperCase = str => str.split(/\n/).map(str => str.toUpperCase()).join('\n')
 const toLowerCase = str => str.toLowerCase()
 const ucFirst = str => str.replace(/^(\s+)?(.)(.*)/, (t, a, b, c) => `${a||''}${(b||'').toUpperCase()}${(c||'').toLowerCase()}` )
-const toName = str => toTitleCase(toTitleCase(str).replace(nameLowerRE, (_, m) =>  m.toLowerCase()))
+const toName = str => toTitleCase(str)
+  .replace(nameLowerRE, (_, m) =>  m.toLowerCase())
+  .replace(/((?=\S*)[a-z]|^[a-z])/i, (_,a,b) => `${(a||'').toUpperCase()}`)
 
 // ADJETIVOS 
 const isMale = str => !!(MALE_PATTERNS.find(test => !!str.match(test[0])))
