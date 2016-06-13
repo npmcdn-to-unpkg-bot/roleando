@@ -51,6 +51,10 @@ userSchema.methods.hasValidToken = function () {
   }
 }
 
+userSchema.methods.isAdmin = function () {
+  return !!config.auth.adminUsers.find(adminId => this._id.equals(adminId))
+}
+
 userSchema.methods.refreshToken = function () {
   this.token = getNewToken(this._id.toString())
 }

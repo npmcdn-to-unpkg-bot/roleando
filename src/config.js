@@ -2,6 +2,8 @@
 
 const PORT = process.env.PORT || 80
 
+const getAdminUsers = () => (process.env.ADMIN_USERS||'').split(',')
+
 module.exports = {
   port: PORT,
   name: 'Roleando',
@@ -15,7 +17,8 @@ module.exports = {
     sessionCookieExpiration: 86400 * 30 * 1000, // 30 days
     sessionSecret: process.env.SESSION_SECRET || 'roleandovoy',
     tokenSecret: process.env.TOKEN_SECRET || 'roleandovoy',
-    tokenExpiration: '30d'// expires in 30 days
+    tokenExpiration: '30d', // expires in 30 days
+    adminUsers: getAdminUsers()
   },
   sendgrid: {
     user: process.env.SENDGRID_USERNAME,
