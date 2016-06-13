@@ -78,10 +78,16 @@
   }
 
   const redirectAfterNew = generator => {
-    alertOk('Guardado con exito')
-    console.log('RES', generator)
+    let redirectUrl
+    if (generator) {
+      alertOk('Guardado con exito')
+      redirectUrl = `${generator.link}?edit=1`
+    } else {
+      alertOk('Contenido eliminado con exito')
+      redirectUrl = `/generadores/`
+    }
     setTimeout(() => {
-      window.location.href = `${generator.link}?edit=1`
+      window.location.href = redirectUrl
     }, 500)
   }
 
@@ -138,12 +144,32 @@
       })
   }
 
-  const enableLoggedUI = () => {
-    $('#save').removeClass('disabled').off('click').on('click', () => saveContent(SOURCE_ID))
+  const removeContent = sourceId => {
 
-    if (SOURCE_ID === 'NEW') return
+    const removeConfirmmation = confirm('Quieres borrar este generador? Esta accion no se puede deshacer.')
+
+    if (!removeConfirmmation) {
+      return
+    }
+    gen.remotes.remove(sourceId)
+      .then(() => redirectAfterNew())
+      .catch(err => {
+        showError(err.message)
+      })
+  }
+
+  const enableLoggedUI = data => {
+    if (!data || SOURCE_ID === 'NEW') {
+      $('#save').removeClass('disabled').off('click').on('click', () => saveContent(SOURCE_ID))
+      return
+    }
 
     $('#fork').removeClass('disabled').off('click').on('click', () => forkContent(SOURCE_ID))
+
+    if (data.owned) {
+      $('#remove').removeClass('disabled').off('click').on('click', () => removeContent(SOURCE_ID))
+
+    }
   }
   
   const updateTitle = e => {
@@ -172,6 +198,7 @@
         $tableDesc.val(res.desc)
         $tpls.val(getTpls(res.data.tpls))
         $sources.val(res.data.tables)
+        enableLoggedUI(res)
         restartGenerator()
         runGenerator()
       })

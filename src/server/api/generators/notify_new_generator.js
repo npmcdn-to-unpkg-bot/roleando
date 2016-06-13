@@ -1,6 +1,8 @@
 'use strict'
 
+const config = require('../../../config')
 const mailer = require('../../../util/mailer')
+const HOST = config.host
 
 module.exports = generator => {
 
@@ -13,7 +15,7 @@ module.exports = generator => {
 const formatText = generator => `
 Nombre: "${generator.name}" 
 
-Link: ${generator.link}
+Link: ${HOST}${generator.link}
 
 Decripcion: "${generator.desc}"
 

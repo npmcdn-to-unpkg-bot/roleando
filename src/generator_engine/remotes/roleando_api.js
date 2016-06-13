@@ -46,7 +46,7 @@ const RoleandoAPI = token => ({
     method: 'DELETE',
     credentials: 'same-origin',
     headers: getHeaders(token)
-  }).then(toJSON)
+  })
 })
 
 module.exports = RoleandoAPI

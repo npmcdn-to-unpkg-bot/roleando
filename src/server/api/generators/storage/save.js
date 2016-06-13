@@ -36,6 +36,7 @@ module.exports = (inId, newData) => validateTable(newData).then(() => {
         return Promise.reject(new errors.BadRequestError('Can\'t save data'))
       }
       delete op.value._id
+      op.value.owned = true
       return addLink(op.value)
     })
   }
@@ -49,6 +50,7 @@ module.exports = (inId, newData) => validateTable(newData).then(() => {
         return Promise.reject(new errors.BadRequestError('Can\'t save data'))
       }
       delete newData._id
+      newData.owned = true
       return addLink(newData)
     })
 })

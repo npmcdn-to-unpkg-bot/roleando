@@ -1,6 +1,7 @@
 'use strict'
 
 const findAll = require('../storage/find_all')
+const addOwned = require('../storage/add_owned')
 
 module.exports = (req, res, next) => {
 
@@ -10,13 +11,9 @@ module.exports = (req, res, next) => {
   }
   findAll(criteria)
     .then(list => {
-
-      list.forEach(row => row.own = req.user ? req.user._id.equals(row.authorId) : false)
-      return list
+      return list.map(item => addOwned(item, req.user))
     })
-
     .then(list => {
-
       res.status(200).send(list)
     })
     .catch(next)
