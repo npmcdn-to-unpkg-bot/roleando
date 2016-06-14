@@ -86,10 +86,6 @@ class Generador {
     return marked(str)
   }
 
-  listFeatured() {
-    return this.remotes.listFeatured()
-  }
-
   remoteToContent(remote) {
     return convertToContent(remote)
   }

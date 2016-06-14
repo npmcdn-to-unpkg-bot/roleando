@@ -12,7 +12,7 @@ const hasMoreSelectors = str => str.match(generatorRE)
 
 const makeInlineGenerator = str => {
 
-  const [, mod, inline] = inlineTableRE.exec(str)
+  const [,, inline] = inlineTableRE.exec(str)
   const options = inline.split(/;/)
 
   return () => {
