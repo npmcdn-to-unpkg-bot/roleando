@@ -6,8 +6,19 @@ const { isDiceRoll, makeRoller } = require('./roller')
 
 const contextRE = /(?:([^\.]+)\.)?(.*)/
 const generatorRE = /\[(?:([^@\]]+)@)?([^\[\]|]*)(?:\|([^\[\]]*))?\]/gm
+const inlineTableRE = /\[(?:([^@\]]+)@)?>(([^;\@\[\]\|]+;*)+)\]/g
 
 const hasMoreSelectors = str => str.match(generatorRE)
+
+const makeInlineGenerator = str => {
+
+  const [, mod, inline] = inlineTableRE.exec(str)
+  const options = inline.split(/;/)
+
+  return () => {
+    return options[Math.floor(Math.random() * options.length)]
+  }
+}
 
 
 const execReplacement = (str, selectors, fromContext, recursive) => {
@@ -23,6 +34,11 @@ const execReplacement = (str, selectors, fromContext, recursive) => {
       let [pattern, mod, fullName, filters] = match
       let [,context,name] = (fullName || '').match(contextRE)
       context = context || fromContext || 'main'
+      let inlineGenerator
+
+      if (pattern.match(inlineTableRE)) {
+        inlineGenerator = makeInlineGenerator(pattern)
+      }
 
       // only add known generators to the queue
       let dice
@@ -31,7 +47,7 @@ const execReplacement = (str, selectors, fromContext, recursive) => {
         line = line.replace(pattern, roller())
       }
 
-      let generator = selectors[`${context}.${name}`] || selectors[name]
+      let generator = inlineGenerator || selectors[`${context}.${name}`] || selectors[name]
 
 
       if (generator) {
