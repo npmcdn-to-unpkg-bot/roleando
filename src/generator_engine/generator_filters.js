@@ -3,7 +3,9 @@
 const id = x => x
 const {
   toTitleCase, toUpperCase, toLowerCase, ucFirst, toName,
-  addArticle, addArticleFemale, addArticleMale, toFemale, toMale
+  addArticle, addArticleFemale, addArticleMale,
+  addUndef, addUndefFemale, addUndefMale,
+  toFemale, toMale
 } = require('./filters')
 
 const generatorRE = /([^\[]*)\[(?:([^@\]]+)@)?([^\[\]|]*)(?:\|([^\[\]]*))?\]/gm
@@ -19,9 +21,12 @@ const FILTERS = {
   male: toMale,
   female: toFemale,
 
-  '+art': addArticle,
-  '+artm': addArticleMale,
-  '+artf': addArticleFemale,
+  '+ar.gen': addArticle,
+  '+ar.genm': addArticleMale,
+  '+ar.genf': addArticleFemale,
+  '+ar.ind': addUndef,
+  '+ar.indm': addUndefMale,
+  '+ar.indf': addUndefFemale,
 
   ucfirst: ucFirst,
   nombre: toName,

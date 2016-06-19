@@ -36,6 +36,10 @@ const addArticle = (str, maleGeneric=true)=> `${(isMale(str) || (isGeneric(str) 
 const addArticleMale = str => addArticle(str, true)
 const addArticleFemale = str => addArticle(str, false)
 
+const addUndef = (str, maleGeneric=true)=> `${(isMale(str) || (isGeneric(str) && maleGeneric)) ? 'un' : 'una'} ${str}`
+const addUndefMale = str => addUndef(str, true)
+const addUndefFemale = str => addUndef(str, false)
+
 const toFemale = str => {
   if (isFemale(str)) return str
   let patt = MALE_PATTERNS.find(test => str.match(test[0]) ? test[1] : false)
@@ -50,6 +54,7 @@ const toMale = str => {
 
 module.exports = {
   toTitleCase, toUpperCase, toLowerCase, ucFirst, toName,
-  addArticle, addArticleFemale, addArticleMale, toFemale, toMale,
-  isGeneric, isMale, isFemale
+  addArticle, addArticleFemale, addArticleMale,
+  addUndef, addUndefFemale, addUndefMale,
+  toFemale, toMale,isGeneric, isMale, isFemale
 }

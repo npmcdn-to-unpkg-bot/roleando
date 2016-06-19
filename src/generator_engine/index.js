@@ -1,16 +1,18 @@
 'use strict'
 
 const marked = require('marked')
-const deepAssign = require('deep-assign');
+const deepAssign = require('deep-assign')
 const fetch = require('isomorphic-fetch')
 
 const parser = require('./parser')
 const createSelectors = require('./selector')
 const makeGenerators = require('./generator')
 const remotes = require('./remotes')
+const sourceToRollTable = require('./transforms/source_to_table')
 // const convertToContent = require('./to_content')
 
 const HOST = '//roleando.herokuapp.com'
+// const HOST = '//localhost:8080'
 
 class Generador {
 
@@ -86,14 +88,17 @@ class Generador {
     return marked(str)
   }
 
-  remoteToContent(remote) {
-    return convertToContent(remote)
+  sourcesToRollTable(opts) {
+    return sourceToRollTable(this.data.sources, opts)
   }
+  // remoteToContent(remote) {
+  //   return convertToContent(remote)
+  // }
 
 }
 module.exports = Generador
 
 process.on('unhandledRejection', (reason, p) => {
   console.log("Unhandled Rejection at: Promise ", p, " reason: ", reason);
-  // application specific logging, throwing an error, or other logic here
+
 });
