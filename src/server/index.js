@@ -8,6 +8,8 @@ const session = require('express-session')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
 const nunjucks = require( 'nunjucks' )
+const nunjuckMarkdown = require('nunjucks-markdown')
+const marked = require('marked')
 const favicon = require('serve-favicon')
 
 const MongoStore = require('connect-mongo')(session)
@@ -52,12 +54,14 @@ require('./sitemap')(app)
 app.use(favicon(`${__dirname}/../../static/favicon.ico`))
 app.use(express.static(`${__dirname}/../../static`))
 
-//app.set('view engine', 'ejs') // set up ejs for templating
-nunjucks.configure( `${__dirname}/views`, {
+const njEnv = nunjucks.configure( `${__dirname}/views`, {
   autoescape: true,
   cache: false,
   express: app
-} )
+})
+
+nunjuckMarkdown.register(njEnv, marked)
+
 app.engine( 'html', nunjucks.render )
 app.set( 'view engine', 'html' ) ;
 app.use(function(err, req, res, next) {

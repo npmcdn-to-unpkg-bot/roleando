@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="//necolas.github.io/normalize.css/4.1.1/normalize.css">
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+    <style>
+
+        .rolltable {
+            margin: 1em;
+            font-size: 1.15em;
+            line-height: 1.8em;
+            width: 95%;
+            border-spacing: 0;
+            border: 1px solid #DDD;
+        }
+
+        .rolltable td {
+            padding: 0 5px;
+        }
+        .rolltable .title {
+            padding-bottom: 1.3em;
+        }
+        .rolltable .roll {
+            min-width: 2.5em;
+            width: 5%;
+            padding-right: 5px;
+            margin-left: 5px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .rolltable .line {
+            width: 95%
+        }
+        .grid-sizer,
+        .grid-item { width: 32%; }
+
+        .gutter-sizer { width: 1%; }
+
+        .grid-item--width2 { width: 48%; }
+
+        .rolltable  tr:nth-child(even) {
+            background: #FFF;
+        }
+        .rolltable  tr td {
+            border-bottom: 1px solid #DDD;
+        }
+        .rolltable  tr:last-child td {
+            border-bottom: none;
+        }
+        .rolltable  tr:nth-child(odd) {background: #fafafa }
+
+        .rolltable  tr .title {
+            background: #f1f1f1;
+            border-bottom: 1px solid #DDD;
+        }
+
+    </style>
+</head>
+
+</html>
+<body>
+{% block body %}
+<div id="tables">
+    <div>
+        <div id="generator-list">
+            {% for generator in generators %}
+            <div >
+                <hr/>
+                <h2>{{generator.name}}</h2>
+                <hr/>
+                <h6>{{generator.shortLink}}</h6>
+                <div class="grid">
+                    {% for name, table in generator.printable %}
+                    <div class="grid-item  grid--draggable">{{ table | safe }}</div>
+                    {% endfor %}
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="//code.jquery.com/jquery-2.2.3.js"></script>
+<script src="//npmcdn.com/packery@2.1/dist/packery.pkgd.min.js"></script>
+<script src="//npmcdn.com/draggabilly@2.1/dist/draggabilly.pkgd.min.js"></script>
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>-->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jspdf/1.2.61/jspdf.debug.js"></script>
+{% endblock %}
+{% block endscript %}
+<script>
+    $(function() {
+        const $grid = $('.grid').packery({
+            // options
+//            itemSelector: '.grid-item',
+//            gutter: 20,
+//            columnWidth: 500
+        });
+// make all grid-items draggable
+        $grid.find('.grid-item').each(function( i, gridItem ) {
+            var draggie = new Draggabilly( gridItem );
+            // bind drag events to Packery
+            $grid.packery( 'bindDraggabillyEvents', draggie );
+        });
+//
+        $("#btnSave").click(function() {
+
+            var pdf = new jsPDF('p','pt','a4');
+            var canvas = pdf.canvas;
+
+            var width = 900;
+            //canvas.width=8.5*72;
+            document.body.style.width=width + "px";
+
+            html2canvas(document.body, {
+                canvas:canvas,
+                onrendered: function(canvas) {
+                    var iframe = document.createElement('iframe');
+                    iframe.setAttribute('style', 'position:absolute;top:0;right:0;height:100%; width:600px');
+                    document.body.appendChild(iframe);
+                    iframe.src = pdf.output('datauristring');
+                    pdf.save('JOER.pdf')
+                    //var div = document.createElement('pre');
+                    //div.innerText=pdf.output();
+                    //document.body.appendChild(div);
+                }
+            });
+
+            var printDoc = new jsPDF('p','pt','a4');
+            printDoc.fromHTML($('#tables').get(0), 0, 0);
+//            printDoc.autoPrint();
+//            printDoc.output("dataurlnewwindow");
+            printDoc.save('JOER.pdf')
+
+           });
+    })
+
+</script>
+{% endblock %}
+
+</body>
+

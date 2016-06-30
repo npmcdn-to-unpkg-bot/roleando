@@ -50,8 +50,12 @@
     const GENERATOR_SOURCE_ID = ''
 {% endif %}
 </script>
-<script src="/dist/generator_engine.js"></script>
-<script src="/js/generadores.es5.js"></script>
+<!--<script src="/dist/generator_engine.js"></script>-->
+<!--<script src="/js/generadores.es5.js"></script>-->
+<script src="/dist/generators.browser.js"></script>
+<script>
+    $(() => Generators.ui.init())
+</script>
 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-575bf8f55e275d97"></script>
 
 <script type="text/javascript">

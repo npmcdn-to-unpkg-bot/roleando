@@ -3,6 +3,9 @@
 const config = require('../../config')
 const findAll = require('../api/generators/storage/find_all')
 const findOne = require('../api/generators/storage/find_one')
+const addOwned = require('../api/generators/storage/add_owned')
+
+const printableGenerators = require('../api/generators/printable_generators')
 
 module.exports = app => {
 
@@ -24,6 +27,7 @@ module.exports = app => {
 
   app.get('/generadores/:slug/:id', (req, res, next) => {
     findOne(req.params.id)
+      .then(generator => addOwned(generator, req.user))
       .then(generator => {
         res.render('generadores/index.html', {
           user: req.user,
@@ -40,6 +44,27 @@ module.exports = app => {
       isNewOrEdit: true
     })
   })
+
+  app.get('/generadores/imprimir', (req, res, next) => {
+    const lista = (req.query.id || '').split(',')
+
+    findAll({ tableId: {$in: lista }}, true)
+      .then(generators => {
+        printableGenerators(generators).then(lista => {
+          res.render('generadores/imprimir.html', {
+            user: req.user,
+            generators: lista
+          })
+        })
+
+
+      })
+      .catch(next)
+
+  })
+
+
+
 
   app.get('/rg/:id', (req, res, next) => {
     findOne(req.params.id)

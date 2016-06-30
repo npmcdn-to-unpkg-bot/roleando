@@ -4,9 +4,9 @@
   "description": "Herramientas RPG",
   "main": "bin/server.js",
   "scripts": {
-    "gen:watch": "watchify src/generator_engine/index.js -t babelify -t [ envify --HOST //localhost:8080 --PORT 8080 ] -d --s Generador -o static/dist/generator_engine.js -v",
-    "gen:prod": "browserify src/generator_engine/index.js -t babelify -d --s Generador -t uglifyify -o static/dist/generator_engine.js -v",
-    "gen:front": "browserify static/js/generadores.js -t babelify -d -t uglifyify -o static/js/generadores.es5.js -v",
+    "build": "npm run prod:generators",
+    "prod:generators": "browserify src/public/generadores/index.js -v -t rollupify -t babelify -t [ envify --NODE_ENV production ] --s Generators -v -o static/dist/generators.browser.js",
+    "dev:generators": "watchify src/public/generadores/index.js -d -v -t rollupify -t babelify -t [ envify --NODE_ENV development ] --s Generators -o static/dist/generators.browser.js",
     "devstart": "nodemon -L bin/server",
     "start": "node bin/server",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,6 +14,7 @@
   "author": "guumaster",
   "license": "ISC",
   "dependencies": {
+    "@guumaster/rpg-generator-engine": "^0.5.1",
     "body-parser": "^1.15.1",
     "connect-mongo": "^1.2.0",
     "cookie-parser": "^1.4.3",
@@ -33,6 +34,7 @@
     "nodemailer": "^2.4.2",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "nunjucks": "^2.4.2",
+    "nunjucks-markdown": "^2.0.0",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
     "require-dir": "^0.3.0",
@@ -50,9 +52,16 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "nodemon": "^1.9.2",
-    "uglify": "^0.1.5",
+    "rollupify": "^0.3.1",
     "uglifyify": "^3.0.1",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "babel-preset-stage-3": "^6.5.0",
+    "del": "^2.2.0",
+    "rollup": "^0.33.0",
+    "rollup-plugin-babel": "^2.4.0",
+    "rollup-plugin-node-resolve": "^1.7.1"
   },
   "engines": {
     "node": ">=6.2.0"
