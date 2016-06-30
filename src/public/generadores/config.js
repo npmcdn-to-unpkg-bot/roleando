@@ -1,6 +1,6 @@
 'use strict'
 
-let  HOST = 'https://roleando.herokuapp.com'
+let  HOST = '//roleando.herokuapp.com'
 
 if (process.env.NODE_ENV === 'development') {
   HOST = '//localhost:8080'

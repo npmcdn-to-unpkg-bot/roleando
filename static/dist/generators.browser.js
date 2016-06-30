@@ -669,7 +669,7 @@ var sourcesToTables = ((sources, opts) => {
   }, {});
 });
 
-const HOST = 'https://roleando.herokuapp.com';
+const HOST = '//roleando.herokuapp.com';
 
 class Generator {
   constructor() {
@@ -4533,7 +4533,7 @@ var fetch = _interopDefault(require('isomorphic-fetch'));
 var RandomGenerator = _interopDefault(require('@guumaster/rpg-generator-engine'));
 var marked = _interopDefault(require('marked'));
 
-var HOST = 'https://roleando.herokuapp.com';
+var HOST = '//roleando.herokuapp.com';
 
 if ("production" === 'development') {
   HOST = '//localhost:8080';
