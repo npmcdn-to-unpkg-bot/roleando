@@ -669,7 +669,7 @@ var sourcesToTables = ((sources, opts) => {
   }, {});
 });
 
-const HOST = '//roleando.herokuapp.com';
+const HOST = 'https://roleando.herokuapp.com';
 
 class Generator {
   constructor() {
@@ -4844,6 +4844,8 @@ var UI = function UI(obj) {
       startClipboard();
       obj.auth.getTokenFromAuth().then(function (token) {
         USER_LOGGEDIN = true;
+        enableLoggedUI();
+      }).catch(function (err) {}).then(function () {
         $tpls.on('change', restartGenerator);
         $tableName.on('change', updateTitle);
         $sources.on('change', restartGenerator);
@@ -4855,9 +4857,7 @@ var UI = function UI(obj) {
           GENERATOR = gen;
           $btnRegen.trigger('click');
         });
-
-        enableLoggedUI();
-      }).catch(function (err) {});
+      });
     }
   };
 };

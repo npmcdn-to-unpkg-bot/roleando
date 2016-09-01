@@ -17,9 +17,9 @@
       port: a.port,
       query: a.search,
       params: (function () {
-        var ret = {},
+        var s, ret = {},
           seg = a.search.replace(/^\?/,'').split('&'),
-          len = seg.length, i = 0, s;
+          len = seg.length, i = 0;
         for (;i<len;i++) {
           if (!seg[i]) { continue; }
           s = seg[i].split('=');
