@@ -161,6 +161,10 @@ export default obj => {
       obj.auth.getTokenFromAuth()
         .then(token => {
           USER_LOGGEDIN = true
+          enableLoggedUI()
+        })
+        .catch(err => {})
+        .then(() => {
           $tpls.on('change', restartGenerator)
           $tableName.on('change', updateTitle)
           $sources.on('change', restartGenerator)
@@ -174,9 +178,7 @@ export default obj => {
               $btnRegen.trigger('click')
             })
 
-          enableLoggedUI()
         })
-        .catch(err => {})
     }
   }
 
